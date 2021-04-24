@@ -1,7 +1,4 @@
 #!/usr/bin/env perl
-# zap2xml (c) <zap2xml@gmail.com> - for personal use only!
-# not for redistribution of any kind, or conversion to other languages,
-# not GPL. not for github, thank you.
 
 BEGIN { $SIG{__DIE__} = sub { 
   return if $^S;
