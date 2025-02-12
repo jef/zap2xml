@@ -20,7 +20,7 @@ services:
       OPT_ARGS: >-
         -I -D -C /config/.zap2xmlrc -o /xmltv/xmltv.xml
       SLEEPTIME: 43200 # 12 hours in seconds
-      TZ: America/Los_Angeles
+      TZ: America/New_York
     volumes:
       - /path/to/appdata/zap2xml:/config
       - /path/to/appdata/xmltv:/xmltv # nice for mapping other drives to this that may use xmltv.xml
