@@ -430,11 +430,11 @@ sub stationToChannel {
   if (defined($options{z})) {
     return sprintf("I%s.%s.tvguide.com", $stations{$s}{number},$stations{$s}{stnNum});
   } elsif (defined($options{O})) {
-    return sprintf("C%s%s.zap2it.com",$stations{$s}{number},lc($stations{$s}{name}));
+    return sprintf("C%s%s.gracenote.com",$stations{$s}{number},lc($stations{$s}{name}));
   } elsif (defined($options{9})) {
-    return sprintf("I%s.labs.zap2it.com",$stations{$s}{stnNum});
+    return sprintf("I%s.labs.gracenote.com",$stations{$s}{stnNum});
   }
-  return sprintf("I%s.%s.zap2it.com", $stations{$s}{number},$stations{$s}{stnNum});
+  return sprintf("I%s.%s.gracenote.com", $stations{$s}{number},$stations{$s}{stnNum});
 }
 
 sub sortChan {
@@ -468,7 +468,7 @@ sub printHeader {
   if (defined($options{z})) {
     print $FH "<tv source-info-url=\"http://tvguide.com/\" source-info-name=\"tvguide.com\"";
   } else {
-    print $FH "<tv source-info-url=\"http://tvlistings.zap2it.com/\" source-info-name=\"zap2it.com\"";
+    print $FH "<tv source-info-url=\"http://tvlistings.gracenote.com/\" source-info-name=\"gracenote.com\"";
   }
   print $FH " generator-info-name=\"zap2xml\" generator-info-url=\"zap2xml\@gmail.com\">\n";
 }
@@ -1343,7 +1343,7 @@ sub parseJSON {
           $programs{$cp}{imageUrl} = $turl;
         }
         if ($program->{'seriesId'} ne '' && $program->{'tmsId'} ne '') {
-           $programs{$cp}{url} = $urlRoot . "/overview.html?programSeriesId=" 
+           $programs{$cp}{url} = $urlRoot . "overview-affiliates.html?programSeriesId=" 
                 . $program->{seriesId} . "&tmsId=" . $program->{tmsId};
         }
 
@@ -1571,7 +1571,7 @@ zap2xml <zap2xml\@gmail.com> ($VERSION)
   -e = hex encode entities (html special characters like accents)
   -E "amp apos quot lt gt" = selectively encode standard XML entities
   -F = output channel names first (rather than "number name")
-  -O = use old tv_grab_na style channel ids (C###nnnn.zap2it.com)
+  -O = use old tv_grab_na style channel ids (C###nnnn.gracenote.com)
   -A "new live" = append " *" to program titles that are "new" and/or "live"
   -M = copy movie_year to empty movie sub-title tags
   -U = UTF-8 encoding (default = "ISO-8859-1")
@@ -1585,7 +1585,7 @@ zap2xml <zap2xml\@gmail.com> ($VERSION)
   -J <xmltv> = include xmltv file in output
   -Y <lineupId> (if not using username/password)
   -Z <zipcode> (if not using username/password)
-  -z = use tvguide.com instead of zap2it.com
+  -z = use tvguide.com instead of gracenote.com
   -a = output all channels (not just favorites) 
   -j = add "series" category to all non-movie programs
 END
