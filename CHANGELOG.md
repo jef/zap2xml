@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/jef/zap2xml/compare/v1.0.1...v1.0.2) (2025-04-02)
+
+
+### Bug Fixes
+
+* gracenote.com local URLs throughout code ([#17](https://www.github.com/jef/zap2xml/issues/17)) ([ec67964](https://www.github.com/jef/zap2xml/commit/ec67964282b3b1a391b7fe2190181c562701b89b))
+
 ### [1.0.1](https://www.github.com/jef/zap2xml/compare/v1.0.0...v1.0.1) (2025-04-02)
 
 
