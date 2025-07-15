@@ -1,20 +1,57 @@
+# Basic settings
+# start: Number of days to offset from today for the start date (default: 0, cmd: -s)
 start=0
+# days: Number of days of program data to fetch (default: 7, cmd: -d)
 days=7
-ncdays=0
-ncsdays=0
-ncmday=-1
+# retries: Number of connection retries before failure (default: 3, max: 20, cmd: -r)
 retries=3
-user=user
-pass=password
+
+# Authentication
+# user: Username/email for Zap2it account (default: empty, cmd: -u)
+user=myemail@example.com
+# pass: Password for Zap2it account (default: empty, cmd: -p)
+pass=mypassword
+
+# Cache settings
+# cache: Directory to store cached data files (default: cache, cmd: -c)
 cache=/config/cache
-icon=/config/icons
-trailer=/config/trailers
-lang=en
-proxy=http://localhost:8080
+# ncdays: Number of days from the end to not cache (default: 0, cmd: -n)
+ncdays=0
+# ncsdays: Number of days from the start to not cache (default: 0, cmd: -N)
+ncsdays=0
+# ncmday: Specific day number to not cache, 1-based relative to start (default: -1, cmd: -B)
+ncmday=-1
+
+# Output settings
+# outfile: Output XML file path (default: xmltv.xml or xtvd.xml, cmd: -o)
 outfile=/xmltv/xmltv.xml
-outformat=xmltv (or 'xtvd')
-lineuptype=type (xtvd only - Cable/CableDigital/Satellite/LocalBroadcast)
-lineupname=name (xtvd only)
-lineuplocation=location (xtvd only)
+# outformat: Output format - xmltv or xtvd (default: xmltv, cmd: -x forces xtvd)
+outformat=xmltv
+
+# Language
+# lang: Language code for program data (default: en, cmd: -l)
+lang=en
+
+# Media directories
+# icon: Directory to store channel icons (default: disabled, cmd: -i)
+icon=/config/icons
+# trailer: Directory to store movie trailers (default: disabled, cmd: -t)
+trailer=/config/trailers
+
+# Network
+# proxy: HTTP proxy server URL (default: none, cmd: -P)
+proxy=http://localhost:8080
+
+# XTVD format settings (only used when outformat=xtvd)
+# lineuptype: Type of lineup - Cable/CableDigital/Satellite/LocalBroadcast (default: none)
+lineuptype=Cable
+# lineupname: Name of the lineup (default: none)
+lineupname=My Cable Provider
+# lineuplocation: Location of the lineup (default: none)
+lineuplocation=New York, NY
+
+# Alternative authentication (TV Guide)
+# lineupid: Lineup ID for TV Guide, alternative to username/password (default: none, cmd: -Y)
 lineupid=X:80000
+# postalcode: Postal code for TV Guide lineup lookup (default: none, cmd: -Z)
 postalcode=01010

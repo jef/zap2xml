@@ -1,7 +1,6 @@
 #!/bin/sh
 
-while :
-do
+while true; do
 	DATE=$(date)
 	eval /opt/zap2xml.pl "$OPT_ARGS"
 	echo "Last run time: $DATE"
