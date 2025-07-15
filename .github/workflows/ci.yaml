@@ -1,14 +1,52 @@
 name: Continuous Integration
+
 on:
   pull_request:
     branches:
       - main
+
 jobs:
-  build:
+  build-docker:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Build service
         run: docker build .
+
+  build-windows:
+    name: Build Windows executable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Perl for Windows build
+        if: ${{ steps.release.outputs.release_created }}
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.42"
+
+      - name: Install Perl dependencies for Windows build
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          cpanm --notest PAR::Packer
+          cpanm --notest Compress::Zlib
+          cpanm --notest Encode
+          cpanm --notest File::Basename
+          cpanm --notest File::Copy
+          cpanm --notest Getopt::Std
+          cpanm --notest HTTP::Cookies
+          cpanm --notest URI
+          cpanm --notest URI::Escape
+          cpanm --notest LWP::UserAgent
+          cpanm --notest LWP::ConnCache
+          cpanm --notest POSIX
+          cpanm --notest Time::Local
+          cpanm --notest Time::Piece
+          cpanm --notest JSON
+
+      - name: Build Windows executable
+        run: pp -o zap2xml.exe zap2xml.pl
