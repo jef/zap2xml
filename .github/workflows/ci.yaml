@@ -26,7 +26,7 @@ jobs:
       - name: Setup Perl for Windows build
         uses: shogo82148/actions-setup-perl@v1
         with:
-          perl-version: "5.42"
+          perl-version: "5.40"
 
       - name: Install Perl dependencies for Windows build
         run: |
