@@ -21,6 +21,7 @@ services:
         -I -D -C /config/.zap2xmlrc -o /xmltv/xmltv.xml
       SLEEPTIME: 43200 # 12 hours in seconds
       TZ: America/New_York
+      USER_AGENT: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" # Optional: customize user agent
     volumes:
       - /path/to/appdata/zap2xml:/config
       - /path/to/appdata/xmltv:/xmltv # nice for mapping other drives to this that may use xmltv.xml
