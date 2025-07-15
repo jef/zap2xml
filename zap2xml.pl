@@ -909,7 +909,7 @@ sub login {
     $ua->conn_cache(LWP::ConnCache->new( total_capacity => undef ));
     $ua->cookie_jar(HTTP::Cookies->new);
     $ua->proxy(['http', 'https'], $proxy) if defined($proxy);
-    $ua->agent('Mozilla/4.0');
+    $ua->agent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36');
     $ua->default_headers->push_header('Accept-Encoding' => 'gzip, deflate');
   }
 
