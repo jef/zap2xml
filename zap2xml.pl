@@ -262,7 +262,7 @@ if (defined($options{z})) {
       my $zstart = substr($ms, 0, -3);
       $params = "?time=$zstart&timespan=$gridHours&pref=$zapPref&";
       $params .= &getZapGParams();
-      $params .= '&TMSID=&AffiliateID=gapzap&FromPage=TV%20Grid';
+      $params .= '&TMSID=&AffiliateID=lat&FromPage=TV%20Grid';
       $params .= '&ActivityID=1&OVDID=&isOverride=true';
       $rs = &getURL($urlRoot . "api/grid$params",1);
       last if ($rs eq '');
@@ -893,7 +893,7 @@ sub getZapParams {
   $phash{countryCode} = $country;
   $phash{headendId} = $lineupId;
   $phash{device} = $device;
-  $phash{aid} = 'gapzap';
+  $phash{aid} = 'lat';
   return %phash;
 }
 
