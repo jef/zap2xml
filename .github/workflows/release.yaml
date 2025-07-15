@@ -20,7 +20,7 @@ jobs:
           package-name: zap2xml
       - name: Login into GitHub Container Registry
         if: ${{ steps.release.outputs.release_created }}
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        run: echo ${{ github.token }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
       - name: Build Docker image
         if: ${{ steps.release.outputs.release_created }}
         run: |
