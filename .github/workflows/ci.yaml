@@ -18,7 +18,7 @@ jobs:
 
   build-windows:
     name: Build Windows executable
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,8 +49,15 @@ jobs:
       - name: Build Windows executable
         run: pp -o zap2xml.exe zap2xml.pl
 
-      - name: Cache once for testing
+      - name: Copy entrypoint.bat
+        run: |
+          copy entrypoint.bat dist\entrypoint.bat
+          copy zap2xml.exe dist\zap2xml.exe
+        shell: cmd
+
+      - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: zap2xml.exe
+          name: zap2xml-windows
+          path: dist/
           retention-days: 1
