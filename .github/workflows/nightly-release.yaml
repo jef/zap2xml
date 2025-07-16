@@ -1,38 +1,40 @@
 name: Nightly Release
+
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch: {}
+
 jobs:
-  check-date:
-    name: Check dates
+  nightly-release:
+    name: Nightly Build and Release Docker image (if code changed in 24h)
     runs-on: ubuntu-latest
-    outputs:
-      should-run: ${{ steps.code-change.outputs.should-run }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Check if code has changed with 24 hours
-        continue-on-error: true
+        uses: actions/checkout@v4
+
+      - name: Check if code has changed within 24 hours
         id: code-change
         run: |
-          [[ $(git rev-list --after="24 hours" --first-parent HEAD) ]] && echo "::set-output name=should-run::true"
-  build-release:
-    name: Build and release Docker image
-    runs-on: ubuntu-latest
-    needs: check-date
-    if: needs.check-date.outputs.should-run == 'true'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+          if [[ $(git rev-list --after="24 hours" --first-parent HEAD) ]]; then
+            echo "should-run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should-run=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Login into GitHub Container Registry
-        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        if: steps.code-change.outputs.should-run == 'true'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
       - name: Build Docker image
+        if: steps.code-change.outputs.should-run == 'true'
         run: |
           docker build \
           -t "ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA:0:7}" \
           -t "ghcr.io/${GITHUB_REPOSITORY}:nightly" .
+
       - name: Release Docker image
+        if: steps.code-change.outputs.should-run == 'true'
         run: |
           docker push "ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA:0:7}"
-          docker push "ghcr.io/${GITHUB_REPOSITORY}:nightly"
+          docker push "ghcr.io/${GITHUB_REPOSITORY}:nightly
