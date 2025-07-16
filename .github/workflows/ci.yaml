@@ -45,6 +45,7 @@ jobs:
           cpanm --notest Time::Local
           cpanm --notest Time::Piece
           cpanm --notest JSON
+          cpanm --notest Sub::Util
 
       - name: Build Windows executable
         run: pp -o zap2xml.exe zap2xml.pl
@@ -52,6 +53,7 @@ jobs:
       - name: Copy entrypoint.bat
         run: |
           mkdir dist
+          copy .zap2xml-example dist\.zap2xml-example
           copy entrypoint.bat dist\entrypoint.bat
           copy zap2xml.exe dist\zap2xml.exe
         shell: cmd
