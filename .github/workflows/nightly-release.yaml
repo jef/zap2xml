@@ -37,4 +37,4 @@ jobs:
         if: steps.code-change.outputs.should-run == 'true'
         run: |
           docker push "ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA:0:7}"
-          docker push "ghcr.io/${GITHUB_REPOSITORY}:nightly
+          docker push "ghcr.io/${GITHUB_REPOSITORY}:nightly"
