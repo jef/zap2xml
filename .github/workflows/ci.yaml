@@ -48,3 +48,9 @@ jobs:
 
       - name: Build Windows executable
         run: pp -o zap2xml.exe zap2xml.pl
+
+      - name: Cache once for testing
+        uses: actions/upload-artifact@v4
+        with:
+          path: zap2xml.exe
+          retention-days: 1
