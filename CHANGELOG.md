@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/jef/zap2xml/compare/v1.0.3...v1.1.0) (2025-07-16)
+
+
+### Features
+
+* make user agent configurable ([9aae5cd](https://www.github.com/jef/zap2xml/commit/9aae5cd1e5575e12d56cf04bb550c20fc63e636d))
+
 ### [1.0.3](https://www.github.com/jef/zap2xml/compare/v1.0.2...v1.0.3) (2025-07-15)
 
 
