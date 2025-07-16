@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-docker:
-    name: Build
+    name: Build Docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,7 +29,7 @@ jobs:
           perl-version: "5.40"
 
       - name: Install Perl dependencies for Windows build
-        run: cpan -i PAR PAR::Dist PAR::Packer sub::Util
+        run: cpanm --install --notest PAR PAR::Dist PAR::Packer sub::Util
 
       - name: Build Windows executable
         run: pp -M sub::Util -o zap2xml.exe zap2xml.pl
