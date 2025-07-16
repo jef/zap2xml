@@ -29,25 +29,10 @@ jobs:
           perl-version: "5.40"
 
       - name: Install Perl dependencies for Windows build
-        run: |
-          cpanm --notest PAR::Packer
-          cpanm --notest Compress::Zlib
-          cpanm --notest Encode
-          cpanm --notest File::Basename
-          cpanm --notest File::Copy
-          cpanm --notest Getopt::Std
-          cpanm --notest HTTP::Cookies
-          cpanm --notest URI
-          cpanm --notest URI::Escape
-          cpanm --notest LWP::UserAgent
-          cpanm --notest LWP::ConnCache
-          cpanm --notest POSIX
-          cpanm --notest Time::Local
-          cpanm --notest Time::Piece
-          cpanm --notest JSON
+        run: cpan -i PAR PAR::Dist PAR::Packer
 
       - name: Build Windows executable
-        run: pp -o zap2xml.exe zap2xml.pl
+        run: pp -M sub::Util -o zap2xml.exe zap2xml.pl
 
       - name: Cache once for testing
         uses: actions/upload-artifact@v4
