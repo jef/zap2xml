@@ -51,6 +51,7 @@ jobs:
 
       - name: Copy entrypoint.bat
         run: |
+          mkdir dist
           copy entrypoint.bat dist\entrypoint.bat
           copy zap2xml.exe dist\zap2xml.exe
         shell: cmd
