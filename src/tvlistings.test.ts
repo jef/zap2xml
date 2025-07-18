@@ -67,14 +67,8 @@ describe("getTVListings", () => {
       json: async () => mockGridApiResponse,
     });
 
-    const url = "https://tvlistings.gracenote.com/api/grid?test=123";
-    const result = await getTVListings(url);
+    const result = await getTVListings();
 
-    expect(mockFetch).toHaveBeenCalledWith(url, {
-      headers: {
-        "User-Agent": expect.any(String),
-      },
-    });
     expect(result).toEqual(mockGridApiResponse);
     expect(result.channels).toHaveLength(1);
     expect(result.channels[0].callSign).toBe("KOMODT");
@@ -86,13 +80,7 @@ describe("getTVListings", () => {
       json: async () => mockGridApiResponse,
     });
 
-    await getTVListings("https://example.com/api");
-
-    expect(mockFetch).toHaveBeenCalledWith("https://example.com/api", {
-      headers: {
-        "User-Agent": expect.any(String),
-      },
-    });
+    await getTVListings();
 
     const callArgs = mockFetch.mock.calls[0];
     const headers = callArgs[1].headers;
@@ -117,7 +105,7 @@ describe("getTVListings", () => {
       json: async () => mockGridApiResponse,
     });
 
-    await getTVListings("https://example.com/api");
+    await getTVListings();
 
     const callArgs = mockFetch.mock.calls[0];
     const userAgent = callArgs[1].headers["User-Agent"];
@@ -131,16 +119,9 @@ describe("getTVListings", () => {
       statusText: "Not Found",
     });
 
-    const url = "https://example.com/api";
-
-    await expect(getTVListings(url)).rejects.toThrow(
+    await expect(getTVListings()).rejects.toThrow(
       "Failed to fetch: 404 Not Found",
     );
-    expect(mockFetch).toHaveBeenCalledWith(url, {
-      headers: {
-        "User-Agent": expect.any(String),
-      },
-    });
   });
 
   it("should throw an error when response is not ok (5xx status)", async () => {
@@ -150,9 +131,7 @@ describe("getTVListings", () => {
       statusText: "Internal Server Error",
     });
 
-    const url = "https://example.com/api";
-
-    await expect(getTVListings(url)).rejects.toThrow(
+    await expect(getTVListings()).rejects.toThrow(
       "Failed to fetch: 500 Internal Server Error",
     );
   });
@@ -164,9 +143,7 @@ describe("getTVListings", () => {
       statusText: "Moved Permanently",
     });
 
-    const url = "https://example.com/api";
-
-    await expect(getTVListings(url)).rejects.toThrow(
+    await expect(getTVListings()).rejects.toThrow(
       "Failed to fetch: 301 Moved Permanently",
     );
   });
@@ -181,7 +158,7 @@ describe("getTVListings", () => {
       json: async () => emptyResponse,
     });
 
-    const result = await getTVListings("https://example.com/api");
+    const result = await getTVListings();
     expect(result).toEqual(emptyResponse);
     expect(result.channels).toHaveLength(0);
   });
@@ -221,7 +198,7 @@ describe("getTVListings", () => {
       json: async () => multiChannelResponse,
     });
 
-    const result = await getTVListings("https://example.com/api");
+    const result = await getTVListings();
     expect(result.channels).toHaveLength(2);
     expect(result.channels[0].callSign).toBe("KOMODT");
     expect(result.channels[1].callSign).toBe("KOMODT2");
@@ -231,9 +208,7 @@ describe("getTVListings", () => {
     const networkError = new Error("Network error");
     mockFetch.mockRejectedValueOnce(networkError);
 
-    const url = "https://example.com/api";
-
-    await expect(getTVListings(url)).rejects.toThrow("Network error");
+    await expect(getTVListings()).rejects.toThrow("Network error");
   });
 
   it("should handle JSON parsing errors", async () => {
@@ -244,9 +219,7 @@ describe("getTVListings", () => {
       },
     });
 
-    const url = "https://example.com/api";
-
-    await expect(getTVListings(url)).rejects.toThrow("Invalid JSON");
+    await expect(getTVListings()).rejects.toThrow("Invalid JSON");
   });
 
   it("should handle malformed JSON response", async () => {
@@ -257,28 +230,8 @@ describe("getTVListings", () => {
       },
     });
 
-    const url = "https://example.com/api";
-
-    await expect(getTVListings(url)).rejects.toThrow(
+    await expect(getTVListings()).rejects.toThrow(
       "Unexpected token < in JSON at position 0",
     );
-  });
-
-  it("should preserve the exact URL passed to the function", async () => {
-    const testUrl =
-      "https://tvlistings.gracenote.com/api/grid?lineupId=USA-lineupId-DEFAULT&timespan=3&headendId=lineupId&country=USA&timezone=&device=-&postalCode=98107&isOverride=true&time=1752865200&pref=16,128&userId=-&aid=orbebb&languagecode=en-us";
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockGridApiResponse,
-    });
-
-    await getTVListings(testUrl);
-
-    expect(mockFetch).toHaveBeenCalledWith(testUrl, {
-      headers: {
-        "User-Agent": expect.any(String),
-      },
-    });
   });
 });
