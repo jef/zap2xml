@@ -11,7 +11,7 @@ for the configuration file.
 npm i && npm run dev
 ```
 
-See below for configuration options.
+See [Command line arguments](#command-line-arguments) for configuration options.
 
 ### Docker
 
@@ -28,18 +28,13 @@ services:
     container_name: zap2xml
     image: ghcr.io/jef/zap2xml:latest
     environment:
-      LINEUP_ID: USA-lineupId-DEFAULT # Lineup ID (default: USA-lineupId-DEFAULT)
-      TIMESPAN: 3 # Timespan in hours (default: 3)
-      PREF: # User preferences, comma separated. Can be m, p, and h (default: empty)
-      POSTAL_CODE: 30309 # Postal code (default: 30309)
-      USER_AGENT: # Custom user agent string (default: Uses random if not specified)
-      TZ: America/New_York # Use your timezone
-      OUTPUT_FILE: /xmltv/xmltv.xml # Output file name (default: xmltv.xml)
-      SLEEP_TIME: 10800 # Sleep time before next run in seconds (default: 10800)
+      OUTPUT_FILE: /xmltv/xmltv.xml
     volumes:
       - ./xmltv:/xmltv
     restart: unless-stopped
 ```
+
+See [Environment variables](#environment-variables) for configuration options.
 
 ## Configuration
 
