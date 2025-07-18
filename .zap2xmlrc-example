@@ -7,9 +7,9 @@ days=7
 retries=3
 
 # Authentication
-# user: Username/email for Zap2it account (default: empty, cmd: -u)
+# user: Username/email for GraceNote account (default: empty, cmd: -u)
 user=myemail@example.com
-# pass: Password for Zap2it account (default: empty, cmd: -p)
+# pass: Password for GraceNote account (default: empty, cmd: -p)
 pass=mypassword
 
 # Cache settings
@@ -40,7 +40,7 @@ trailer=/config/trailers
 
 # Network
 # proxy: HTTP proxy server URL (default: none, cmd: -P)
-proxy=http://localhost:8080
+# proxy=http://localhost:8080
 
 # XTVD format settings (only used when outformat=xtvd)
 # lineuptype: Type of lineup - Cable/CableDigital/Satellite/LocalBroadcast (default: none)
@@ -52,6 +52,6 @@ lineuplocation=New York, NY
 
 # Alternative authentication (TV Guide)
 # lineupid: Lineup ID for TV Guide, alternative to username/password (default: none, cmd: -Y)
-lineupid=X:80000
+# lineupid=X:80000
 # postalcode: Postal code for TV Guide lineup lookup (default: none, cmd: -Z)
-postalcode=01010
+# postalcode=10001

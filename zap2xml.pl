@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-BEGIN { $SIG{__DIE__} = sub { 
+BEGIN { $SIG{__DIE__} = sub {
   return if $^S;
   my $msg = join(" ", @_);
   print STDERR "$msg";
@@ -18,7 +18,7 @@ BEGIN { $SIG{__DIE__} = sub {
       }
     }
     sleep(5);
-  } 
+  }
   exit 1;
 }}
 
@@ -67,9 +67,9 @@ $lang = 'en';
 $userEmail = '';
 $password = '';
 $proxy;
-$postalcode; 
+$postalcode;
 $country;
-$lineupId; 
+$lineupId;
 $device;
 $sleeptime = 0;
 $allChan = 0;
@@ -128,14 +128,14 @@ if (open (CONF, $confFile))
     }
   }
   close (CONF);
-} 
+}
 &HELP_MESSAGE() if !(%options) && $userEmail eq '';
 
 $cacheDir = $options{c} if defined $options{c};
 $days = $options{d} if defined $options{d};
 $ncdays = $options{n} if defined $options{n};
 $ncsdays = $options{N} if defined $options{N};
-$ncmday = $options{B} if defined $options{B}; 
+$ncmday = $options{B} if defined $options{B};
 $start = $options{s} if defined $options{s};
 $retries = $options{r} if defined $options{r};
 $iconDir = $options{i} if defined $options{i};
@@ -212,9 +212,9 @@ if (defined($options{z})) {
 
   for ($count=0; $count < $maxCount; $count++) {
     $curday = int($count / (24/$gridHours)) + 1;
-    if ($count == 0) { 
+    if ($count == 0) {
       $XTVD_startTime = $ms;
-    } elsif ($count == $maxCount - 1) { 
+    } elsif ($count == $maxCount - 1) {
       $XTVD_endTime = $ms + ($gridHours * 3600000) - 1;
     }
 
@@ -241,8 +241,8 @@ if (defined($options{z})) {
     }
     $exp = 0;
     $tba = 0;
-    $ms += ($gridHours * 3600 * 1000); 
-  } 
+    $ms += ($gridHours * 3600 * 1000);
+  }
 
 } else {
 
@@ -253,9 +253,9 @@ if (defined($options{z})) {
   $ms = &hourToMillis() + $offset;
   for ($count=0; $count < $maxCount; $count++) {
     $curday = int($count / (24/$gridHours)) + 1;
-    if ($count == 0) { 
+    if ($count == 0) {
       $XTVD_startTime = $ms;
-    } elsif ($count == $maxCount - 1) { 
+    } elsif ($count == $maxCount - 1) {
       $XTVD_endTime = $ms + ($gridHours * 3600000) - 1;
     }
 
@@ -264,14 +264,14 @@ if (defined($options{z})) {
       my $zstart = substr($ms, 0, -3);
       $params = "?time=$zstart&timespan=$gridHours&pref=$zapPref&";
       $params .= &getZapGParams();
-      $params .= '&TMSID=&AffiliateID=lat&FromPage=TV%20Grid';
+      $params .= '&TMSID=&AffiliateID=orbebb&FromPage=TV%20Grid';
       $params .= '&ActivityID=1&OVDID=&isOverride=true';
       $rs = &getURL($urlRoot . "api/grid$params",1);
       last if ($rs eq '');
       $rc = Encode::encode('utf8', $rs);
       &wbf($fn, Compress::Zlib::memGzip($rc));
     }
-   
+
     &pout("[" . ($count+1) . "/" . "$maxCount] Parsing: $fn\n");
     &parseJSON($fn);
 
@@ -286,13 +286,13 @@ if (defined($options{z})) {
     $exp = 0;
     $tba = 0;
     $ms += ($gridHours * 3600 * 1000);
-  } 
+  }
 
 }
 my $s2 = time();
 my $tsockt = scalar(keys %tsocks);
-&pout("Downloaded " . &pl($tb, "byte") 
-  . " in " . &pl($treq, "http request") 
+&pout("Downloaded " . &pl($tb, "byte")
+  . " in " . &pl($treq, "http request")
   . " using " . &pl($tsockt > 0 ? $tsockt : $treq, "socket") . ".\n") if $tb > 0;
 &pout("Expired programs: $expired\n") if $expired > 0;
 &pout("Writing XML file: $outFile\n");
@@ -300,7 +300,7 @@ open($FH, ">$outFile");
 my $enc = 'ISO-8859-1';
 if (defined($options{U})) {
   $enc = 'UTF-8';
-} 
+}
 if ($outputXTVD) {
   &printHeaderXTVD($FH, $enc);
   &printStationsXTVD($FH);
@@ -315,7 +315,7 @@ if ($outputXTVD) {
   if (defined($includeXMLTV)) {
     &pout("Reading XML file: $includeXMLTV\n");
     &incXML("<channel","<programme", $FH);
-  } 
+  }
   &printProgrammes($FH);
   &incXML("<programme","</tv", $FH) if defined($includeXMLTV);
   &printFooter($FH);
@@ -380,7 +380,7 @@ sub trim {
 sub trim2 {
   my $s = &trim(shift);
   $s =~ s/[^\w\s\(\)\,]//gsi;
-  $s =~ s/\s+/ /gsi; 
+  $s =~ s/\s+/ /gsi;
   return $s;
 }
 
@@ -410,7 +410,7 @@ sub convOADXTVD {
 }
 
 sub convDurationXTVD {
-  my $duration = shift; 
+  my $duration = shift;
   my $hour = int($duration / 3600000);
   my $minutes = int(($duration - ($hour * 3600000)) / 60000);
   return sprintf("PT%02dH%02dM", $hour, $minutes);
@@ -478,7 +478,7 @@ sub printHeader {
 sub printFooter {
   my $FH = shift;
   print $FH "</tv>\n";
-} 
+}
 
 sub printChannels {
   my $FH = shift;
@@ -505,13 +505,13 @@ sub printChannels {
 sub printProgrammes {
   my $FH = shift;
   for my $station ( sort sortChan keys %stations ) {
-    my $i = 0; 
+    my $i = 0;
     my @keyArray = sort { $schedule{$station}{$a}{time} cmp $schedule{$station}{$b}{time} } keys %{$schedule{$station}};
     foreach $s (@keyArray) {
       if ($#keyArray <= $i && !defined($schedule{$station}{$s}{endtime})) {
         delete $schedule{$station}{$s};
-        next; 
-      } 
+        next;
+      }
       my $p = $schedule{$station}{$s}{program};
       my $startTime = &convTime($schedule{$station}{$s}{time});
       my $startTZ = &timezone($schedule{$station}{$s}{time});
@@ -530,7 +530,7 @@ sub printProgrammes {
         my $title = &enc($programs{$p}{title});
         $title = &appendAsterisk($title, $station, $s);
         print $FH "\t\t<title lang=\"$lang\">" . $title . "</title>\n";
-      } 
+      }
 
       if (defined($programs{$p}{episode}) || (defined($options{M}) && defined($programs{$p}{movie_year}))) {
         print $FH "\t\t<sub-title lang=\"$lang\">";
@@ -538,13 +538,13 @@ sub printProgrammes {
              print $FH &enc($programs{$p}{episode});
           } else {
              print $FH "Movie (" . $programs{$p}{movie_year} . ")";
-          } 
+          }
         print $FH "</sub-title>\n"
       }
 
       print $FH "\t\t<desc lang=\"$lang\">" . &enc($programs{$p}{description}) . "</desc>\n" if defined($programs{$p}{description});
 
-      if (defined($programs{$p}{actor}) 
+      if (defined($programs{$p}{actor})
         || defined($programs{$p}{director})
         || defined($programs{$p}{writer})
         || defined($programs{$p}{producer})
@@ -562,7 +562,7 @@ sub printProgrammes {
         &printCredits($FH, $p, "presenter");
         print $FH "\t\t</credits>\n";
       }
-  
+
       my $date;
       if (defined($programs{$p}{movie_year})) {
         $date = $programs{$p}{movie_year};
@@ -675,7 +675,7 @@ sub printCredits {
 sub printFooterXTVD {
   my $FH = shift;
   print $FH "</xtvd>\n";
-} 
+}
 
 sub printStationsXTVD {
   my $FH = shift;
@@ -711,19 +711,19 @@ sub printSchedulesXTVD {
   my $FH = shift;
   print $FH "<schedules>\n";
   for my $station ( sort sortChan keys %stations ) {
-    my $i = 0; 
+    my $i = 0;
     my @keyArray = sort { $schedule{$station}{$a}{time} cmp $schedule{$station}{$b}{time} } keys %{$schedule{$station}};
     foreach $s (@keyArray) {
       if ($#keyArray <= $i) {
         delete $schedule{$station}{$s};
-        next; 
-      } 
+        next;
+      }
       my $p = $schedule{$station}{$s}{program};
       my $startTime = &convTimeXTVD($schedule{$station}{$s}{time});
       my $stopTime = &convTimeXTVD($schedule{$station}{$keyArray[$i+1]}{time});
       my $duration = &convDurationXTVD($schedule{$station}{$keyArray[$i+1]}{time} - $schedule{$station}{$s}{time});
 
-      print $FH "\t<schedule program='$p' station='" . $stations{$station}{stnNum} . "' time='$startTime' duration='$duration'"; 
+      print $FH "\t<schedule program='$p' station='" . $stations{$station}{stnNum} . "' time='$startTime' duration='$duration'";
       print $FH " hdtv='true' " if (defined($schedule{$station}{$s}{quality}));
       print $FH " new='true' " if (defined($schedule{$station}{$s}{new}) || defined($schedule{$station}{$s}{live}));
       print $FH "/>\n";
@@ -741,16 +741,16 @@ sub printProgramsXTVD {
       print $FH "\t\t<title>" . &enc($programs{$p}{title}) . "</title>\n" if defined($programs{$p}{title});
       print $FH "\t\t<subtitle>" . &enc($programs{$p}{episode}) . "</subtitle>\n" if defined($programs{$p}{episode});
       print $FH "\t\t<description>" . &enc($programs{$p}{description}) . "</description>\n" if defined($programs{$p}{description});
-      
+
       if (defined($programs{$p}{movie_year})) {
         print $FH "\t\t<year>" . $programs{$p}{movie_year} . "</year>\n";
       } else { #Guess
-        my $showType = "Series"; 
+        my $showType = "Series";
         if ($programs{$p}{title} =~ /Paid Programming/i) {
           $showType = "Paid Programming";
-        } 
-        print $FH "\t\t<showType>$showType</showType>\n"; 
-        print $FH "\t\t<series>EP" . substr($p,2,8) . "</series>\n"; 
+        }
+        print $FH "\t\t<showType>$showType</showType>\n";
+        print $FH "\t\t<series>EP" . substr($p,2,8) . "</series>\n";
         print $FH "\t\t<originalAirDate>" . &convOADXTVD($programs{$p}{originalAirDate}) . "</originalAirDate>\n" if defined($programs{$p}{originalAirDate});
       }
       print $FH "\t</program>\n";
@@ -785,25 +785,25 @@ sub loginTVG {
       if ($userEmail ne '' && $password ne '') {
         my $rc = 0;
         while ($rc++ < $retries) {
-          my $r = &ua_post($tvgurl . 'user/attempt/', 
-            { 
+          my $r = &ua_post($tvgurl . 'user/attempt/',
+            {
               _token => $token,
-              email => $userEmail, 
+              email => $userEmail,
               password => $password,
             }, 'X-Requested-With' => 'XMLHttpRequest'
-          ); 
+          );
 
           $dc = Encode::encode('utf8', $r->decoded_content( raise_error => 1 ));
           if ($dc =~ /success/) {
-            $ua->cookie_jar->scan(sub { if ($_[1] eq "ServiceID") { $zlineupId = $_[2]; }; }); 
+            $ua->cookie_jar->scan(sub { if ($_[1] eq "ServiceID") { $zlineupId = $_[2]; }; });
             if (!defined($options{a})) {
-              my $r = &ua_get($tvgurl . "user/favorites/?provider=$zlineupId",'X-Requested-With' => 'XMLHttpRequest'); 
+              my $r = &ua_get($tvgurl . "user/favorites/?provider=$zlineupId",'X-Requested-With' => 'XMLHttpRequest');
               $dc = Encode::encode('utf8', $r->decoded_content( raise_error => 1 ));
               if ($dc =~ /\{\"code\":200/) {
                 &parseTVGFavs($dc);
-              } 
+              }
             }
-            return $dc; 
+            return $dc;
           } else {
             &pout("[Attempt $rc] " . $r->status_line . ":"  . $dc . "\n");
             sleep ($sleeptime + 1);
@@ -820,13 +820,13 @@ sub loginTVG {
 sub loginZAP {
   my $rc = 0;
   while ($rc++ < $retries) {
-    my $r = &ua_post($urlRoot . 'api/user/login', 
-      { 
+    my $r = &ua_post($urlRoot . 'api/user/login',
+      {
         emailid => $userEmail, password => $password,
         usertype => '0', facebookuser =>'false',
       }
-    ); 
- 
+    );
+
     $dc = Encode::encode('utf8', $r->decoded_content( raise_error => 1 ));
     if ($r->is_success) {
       my $t = decode_json($dc);
@@ -835,21 +835,21 @@ sub loginZAP {
       $zapPref .= "m" if ($t->{isMusic});
       $zapPref .= "p" if ($t->{isPPV});
       $zapPref .= "h" if ($t->{isHD});
-      if ($zapPref eq '') { $zapPref = '-' } 
+      if ($zapPref eq '') { $zapPref = '-' }
       else {
         $zapPref = join(",", split(//, $zapPref));
-      } 
+      }
 
       my $prs = $t->{'properties'};
       $postalcode = $prs->{2002};
       $country = $prs->{2003};
       ($lineupId, $device) = split(/:/, $prs->{2004});
       if (!defined($options{a})) {
-        my $r = &ua_post($urlRoot . "api/user/favorites", { token => $zapToken }, 'X-Requested-With' => 'XMLHttpRequest'); 
+        my $r = &ua_post($urlRoot . "api/user/favorites", { token => $zapToken }, 'X-Requested-With' => 'XMLHttpRequest');
         $dc = Encode::encode('utf8', $r->decoded_content( raise_error => 1 ));
         if ($r->is_success) {
           &parseZFavs($dc);
-        } else { 
+        } else {
           &perr("FF" . $r->status_line .  ": $dc\n");
         }
       }
@@ -895,7 +895,7 @@ sub getZapParams {
   $phash{countryCode} = $country;
   $phash{headendId} = $lineupId;
   $phash{device} = $device;
-  $phash{aid} = 'lat';
+  $phash{aid} = 'orbebb';
   return %phash;
 }
 
@@ -932,7 +932,7 @@ sub ua_stats {
   my $r;
   if ($s eq 'POST') {
     $r = $ua->post(@p);
-  } else { 
+  } else {
     $r = $ua->get(@p);
   }
   my $cc = $ua->conn_cache;
@@ -974,7 +974,7 @@ sub getURL {
     }
   }
   &perr("Failed to download within $retries retries.\n");
-  if ($er) { 
+  if ($er) {
     &perr("Server out of data? Temporary server error? Normal exit anyway.\n");
     return "";
   };
@@ -1161,7 +1161,7 @@ sub parseTVGGrid {
     my $src = $cjs->{'SourceId'};
     my $num = $cjs->{'Number'};
 
-    $cs = "$num.$src"; 
+    $cs = "$num.$src";
 
     if (%tvgfavs) {
       next if (!$tvgfavs{$cs});
@@ -1192,17 +1192,17 @@ sub parseTVGGrid {
       $cp = $pe->{'ProgramId'};
       my $catid = $pe->{'CatId'};
 
-      if ($catid == 1) { $programs{$cp}{genres}{movie} = 1 } 
-      elsif ($catid == 2) { $programs{$cp}{genres}{sports} = 1 } 
-      elsif ($catid == 3) { $programs{$cp}{genres}{family} = 1 } 
-      elsif ($catid == 4) { $programs{$cp}{genres}{news} = 1 } 
+      if ($catid == 1) { $programs{$cp}{genres}{movie} = 1 }
+      elsif ($catid == 2) { $programs{$cp}{genres}{sports} = 1 }
+      elsif ($catid == 3) { $programs{$cp}{genres}{family} = 1 }
+      elsif ($catid == 4) { $programs{$cp}{genres}{news} = 1 }
       # 5 - 10?
-      # my $subcatid = $pe->{'SubCatId'}; 
+      # my $subcatid = $pe->{'SubCatId'};
 
       my $ppid = $pe->{'ParentProgramId'};
       if ((defined($ppid) && $ppid != 0)
         || (defined($options{j}) && $catid != 1)) {
-        $programs{$cp}{genres}{series} = 99; 
+        $programs{$cp}{genres}{series} = 99;
       }
 
       $programs{$cp}{title} = $pe->{'Title'};
@@ -1245,16 +1245,16 @@ sub parseTVGGrid {
           $url = $tvo->{'EpisodeSEOUrl'};
         } elsif(defined($tvo->{'SEOUrl'}) && $tvo->{'SEOUrl'} ne '') {
           $url = $tvo->{'SEOUrl'};
-          $url = "/movies$url" if ($catid == 1 && $url !~ /movies/); 
+          $url = "/movies$url" if ($catid == 1 && $url !~ /movies/);
         }
         $programs{$cp}{url} = substr($tvgurl, 0, -1) . $url if defined($url);
       }
-  
-      if (defined($options{I}) 
-        || (defined($options{D}) && $programs{$cp}{genres}{movie}) 
+
+      if (defined($options{I})
+        || (defined($options{D}) && $programs{$cp}{genres}{movie})
         || (defined($options{W}) && $programs{$cp}{genres}{movie}) ) {
           &getDetails(\&parseTVGD, $cp, $tvgMapiRoot . "listings/details?program=$cp", "");
-      } 
+      }
     }
   }
 }
@@ -1295,7 +1295,7 @@ sub parseJSON {
           if ($options{8}) {
             next if $zapStarred{$s->{channelId}};
 	    $zapStarred{$s->{channelId}} = 1;
-          } 
+          }
 	} else {
           next;
 	}
@@ -1309,7 +1309,7 @@ sub parseJSON {
 
       if (!defined($stations{$cs}{order})) {
         if (defined($options{b})) {
-          $stations{$cs}{order} = $coNum++; 
+          $stations{$cs}{order} = $coNum++;
         } else {
           $stations{$cs}{order} = $stations{$cs}{number};
         }
@@ -1345,7 +1345,7 @@ sub parseJSON {
           $programs{$cp}{imageUrl} = $turl;
         }
         if ($program->{'seriesId'} ne '' && $program->{'tmsId'} ne '') {
-           $programs{$cp}{url} = $urlRoot . "overview-affiliates.html?programSeriesId=" 
+           $programs{$cp}{url} = $urlRoot . "overview-affiliates.html?programSeriesId="
                 . $program->{seriesId} . "&tmsId=" . $program->{tmsId};
         }
 
@@ -1395,7 +1395,7 @@ sub parseJSON {
           &postJSONO($cp, $program->{seriesId});
         }
         if (defined($options{j}) && $cp !~ /^MV/) {
-          $programs{$cp}{genres}{series} = 99; 
+          $programs{$cp}{genres}{series} = 99;
         }
       }
     }
@@ -1403,7 +1403,7 @@ sub parseJSON {
   return 0;
 }
 
-sub postJSONO { 
+sub postJSONO {
   my ($cp, $sid) = @_;
   my $fn = "$cacheDir/O$cp\.js\.gz";
 
@@ -1417,7 +1417,7 @@ sub postJSONO {
     my %phash = &getZapPParams();
     $phash{programSeriesID} = $sid;
     $phash{'clickstream[FromPage]'} = 'TV%20Grid';
-    my $r = &ua_post($url, \%phash, 'X-Requested-With' => 'XMLHttpRequest'); 
+    my $r = &ua_post($url, \%phash, 'X-Requested-With' => 'XMLHttpRequest');
     if ($r->is_success) {
       $dc = Encode::encode('utf8', $r->decoded_content( raise_error => 1 ));
       &wbf($fn, Compress::Zlib::memGzip($dc));
@@ -1460,8 +1460,8 @@ sub postJSONO {
       } else {
         ${$programs{$cp}{actor}}{$n} = $i++;
         ${$programs{$cp}{role}}{$n} = $cn if length($cn);
-      } 
-    } 
+      }
+    }
     $i = 1;
     foreach my $c (@{$t->{'overviewTab'}->{crew}}) {
       my $n = $c->{name};
@@ -1473,7 +1473,7 @@ sub postJSONO {
       } elsif ($cr =~ /writer/) {
         ${$programs{$cp}{writer}}{$n} = $i++;
       }
-    } 
+    }
     if (!defined($programs{$cp}{imageUrl}) && $t->{seriesImage} ne '') {
       my $turl = $urlAssets;
       $turl .= $t->{seriesImage} . ".jpg";
@@ -1484,24 +1484,24 @@ sub postJSONO {
     }
     if ($cp =~ /^EP/) { # GMT @ 00:00:00
       my $ue = $t->{overviewTab}->{upcomingEpisode};
-      if (defined($ue) && lc($ue->{tmsID}) eq lc($cp) 
+      if (defined($ue) && lc($ue->{tmsID}) eq lc($cp)
         && $ue->{originalAirDate} ne ''
         && $ue->{originalAirDate} ne '1000-01-01T00:00Z') {
           $oad = str2time2($ue->{originalAirDate}) ;
-          $oad *= 1000; 
+          $oad *= 1000;
           $programs{$cp}{originalAirDate} = $oad;
       } else {
         foreach my $ue (@{$t->{upcomingEpisodeTab}}) {
-          if (lc($ue->{tmsID}) eq lc($cp) 
+          if (lc($ue->{tmsID}) eq lc($cp)
 		&& $ue->{originalAirDate} ne ''
 		&& $ue->{originalAirDate} ne '1000-01-01T00:00Z'
 	    ) {
               $oad = str2time2($ue->{originalAirDate}) ;
-              $oad *= 1000; 
+              $oad *= 1000;
               $programs{$cp}{originalAirDate} = $oad;
               last;
           }
-        }  
+        }
       }
     }
   } else {
@@ -1524,7 +1524,7 @@ sub hourToMillis {
   if ($start == 0) {
     $hour = int($hour/$gridHours) * $gridHours;
   } else {
-    $hour = 0; 
+    $hour = 0;
   }
   $t = timegm(0,0,$hour,$mday,$mon,$year);
   $t = $t - (&tz_offset * 3600) if !defined($options{g});
@@ -1541,7 +1541,7 @@ sub tz_offset {
 }
 
 sub timezone {
-  my $tztime = defined $_[0] ? &_rtrim3(shift) : time; 
+  my $tztime = defined $_[0] ? &_rtrim3(shift) : time;
   my $os = sprintf "%.1f", (timegm(localtime($tztime)) - $tztime) / 3600;
   my $mins = sprintf "%02d", abs( $os - int($os) ) * 60;
   return sprintf("%+03d", int($os)) . $mins;
@@ -1578,17 +1578,17 @@ zap2xml <zap2xml\@gmail.com> ($VERSION)
   -M = copy movie_year to empty movie sub-title tags
   -U = UTF-8 encoding (default = "ISO-8859-1")
   -L = output "<live />" tag (not part of xmltv.dtd)
-  -T = don't cache files containing programs with "$sTBA" titles 
+  -T = don't cache files containing programs with "$sTBA" titles
   -P <http://proxyhost:port> = to use an http proxy
   -C <configuration file> (default = "$confFile")
-  -S <#seconds> = sleep between requests to prevent flooding of server 
+  -S <#seconds> = sleep between requests to prevent flooding of server
   -D = include details = 1 extra http request per program!
   -I = include icons (image URLs) - 1 extra http request per program!
   -J <xmltv> = include xmltv file in output
   -Y <lineupId> (if not using username/password)
   -Z <zipcode> (if not using username/password)
   -z = use tvguide.com instead of gracenote.com
-  -a = output all channels (not just favorites) 
+  -a = output all channels (not just favorites)
   -j = add "series" category to all non-movie programs
 END
 sleep(5) if ($^O eq 'MSWin32');

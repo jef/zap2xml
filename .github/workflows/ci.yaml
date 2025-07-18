@@ -1,14 +1,17 @@
 name: Continuous Integration
+
 on:
   pull_request:
     branches:
       - main
+
 jobs:
-  build:
-    name: Build
+  build-docker:
+    name: Build Docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Build service
         run: docker build .

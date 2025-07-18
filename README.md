@@ -1,11 +1,12 @@
 # zap2xml
 
-See [zap2xml](https://web.archive.org/web/20200426004001/zap2xml.awardspace.info/) for original Perl script and guidance for the configuration file.
+See [zap2xml](https://web.archive.org/web/20200426004001/zap2xml.awardspace.info/) for original Perl script and guidance
+for the configuration file.
 
 ## Docker
 
 | Tag     | Description             |
-| ------- | ----------------------- |
+|---------|-------------------------|
 | latest  | Stable zap2xml releases |
 | nightly | HEAD zap2xml release    |
 
@@ -31,7 +32,7 @@ services:
 ### Optional environment variables
 
 | Variable     | Description                                                                        | Type    | Default                                                                                                           |
-| ------------ | ---------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+|--------------|------------------------------------------------------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------|
 | `USER_AGENT` | Custom user agent string for HTTP requests.                                        | String  | `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36` |
 | `SLEEPTIME`  | Number of seconds to sleep between runs (useful for scheduling in Docker or cron). | Integer | `43200`                                                                                                           |
 | `TZ`         | Timezone for program times (affects output XML and Perl's time calculations).      | String  | System default                                                                                                    |
@@ -39,12 +40,12 @@ services:
 ### Optional run configurations
 
 | Option           | Type      | Default     | Description                                            | Config File                   | Command Line |
-| ---------------- | --------- | ----------- | ------------------------------------------------------ | ----------------------------- | ------------ |
+|------------------|-----------|-------------|--------------------------------------------------------|-------------------------------|--------------|
 | `start`          | Integer   | `0`         | Number of days to offset from today for the start date | `start=1`                     | `-s`         |
 | `days`           | Integer   | `7`         | Number of days of program data to fetch                | `days=14`                     | `-d`         |
 | `retries`        | Integer   | `3`         | Number of connection retries before failure (max 20)   | `retries=5`                   | `-r`         |
-| `user`           | String    | (empty)     | Username/email for Zap2it account                      | `user=myemail@example.com`    | `-u`         |
-| `pass`           | String    | (empty)     | Password for Zap2it account                            | `pass=mypassword`             | `-p`         |
+| `user`           | String    | (empty)     | Username/email for GraceNote account                   | `user=myemail@example.com`    | `-u`         |
+| `pass`           | String    | (empty)     | Password for GraceNote account                         | `pass=mypassword`             | `-p`         |
 | `cache`          | Directory | `cache`     | Directory to store cached data files                   | `cache=/config/cache`         | `-c`         |
 | `ncdays`         | Integer   | `0`         | Number of days from the end to not cache               | `ncdays=2`                    | `-n`         |
 | `ncsdays`        | Integer   | `0`         | Number of days from the start to not cache             | `ncsdays=1`                   | `-N`         |

@@ -1,4 +1,4 @@
-FROM alpine:3.13.5
+FROM alpine:3.22.1
 
 ENV SLEEPTIME=43200
 
