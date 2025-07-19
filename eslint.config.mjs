@@ -10,6 +10,6 @@ export default tseslint.config(
   tseslint.configs.stylistic,
   prettierConfig,
   {
-    ignores: ["build"],
+    ignores: ["dist/**", "node_modules/**"],
   },
 );

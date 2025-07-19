@@ -6,7 +6,7 @@ import { config } from "./config.js";
 function isHelp() {
   if (process.argv.includes("--help")) {
     console.log(`
-Usage: node build/index.js [options]
+Usage: node dist/index.js [options]
 
 Options:
 --help           Show this help message

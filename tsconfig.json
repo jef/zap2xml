@@ -1,16 +1,41 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "build",
-    "module": "Node16",
-    "moduleResolution": "Node16",
-    "target": "ESNext",
-    "skipLibCheck": true
+    "outDir": "${configDir}/dist",
+    "module": "node18",
+    "moduleDetection": "force",
+    "target": "esnext",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022", // Node.js 18
+    ],
+    "resolveJsonModule": false, // ESM doesn't yet support JSON modules.
+    "jsx": "react",
+    "declaration": true,
+    "newLine": "lf",
+    "stripInternal": true,
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedSideEffectImports": true,
+    "noEmitOnError": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "sourceMap": true
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "src/**/*.test.ts"
+    "src/**/*.test.ts",
+    "node_modules/**"
   ]
 }
