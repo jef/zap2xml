@@ -83,7 +83,7 @@ function buildUrl() {
     lineupId: config.lineupId,
     timespan: config.timespan,
     headendId: "lineupId",
-    country: "USA",
+    country: config.country,
     timezone: config.timezone,
     postalCode: config.postalCode,
     isOverride: "true",
@@ -109,7 +109,7 @@ export async function getTVListings(): Promise<GridApiResponse> {
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch: ${response.status} ${response.statusText}`,
+      `Failed to fetch: ${response.status} ${response.statusText}`
     );
   }
 

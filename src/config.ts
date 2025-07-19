@@ -10,6 +10,10 @@ export const config = {
     process.env.TIMESPAN ||
     process.argv.find((arg) => arg.startsWith("--timespan="))?.split("=")[1] ||
     "3",
+  country:
+    process.env.COUNTRY ||
+    process.argv.find((arg) => arg.startsWith("--country="))?.split("=")[1] ||
+    "USA",
   postalCode:
     process.env.POSTAL_CODE ||
     process.argv

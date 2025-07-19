@@ -49,6 +49,7 @@ See [Environment variables](#environment-variables) for configuration options.
 | `LINEUP_ID`   | Lineup ID; You can find this at https://tvlistings.gracenote.com/grid-affiliates.html?aid=orbebb                | String  | `USA-lineupId-DEFAULT` (Attenna) |
 | `TIMESPAN`    | Either 3 or 6 hours of shows                                                                                    | Integer | 3                                |
 | `PREF`        | User Preferences, comma separated list. `m` for showing music, `p` for showing pay-per-view, `h` for showing HD | String  | (empty)                          |
+| `COUNTRY`     | Country code (default: `US`)                                                                                    | String  | US                               |
 | `POSTAL_CODE` | Postal code of where shows are available.                                                                       | Integer | 30309                            |
 | `USER_AGENT`  | Custom user agent string for HTTP requests.                                                                     | String  | Uses random if not specified     |
 | `TZ`          | Timezone                                                                                                        | String  | System default                   |
@@ -62,6 +63,7 @@ See [Environment variables](#environment-variables) for configuration options.
 | `--lineupId`   | Lineup ID; You can find this at https://tvlistings.gracenote.com/grid-affiliates.html?aid=orbebb                | String  | `USA-lineupId-DEFAULT` (Attenna) |
 | `--timespan`   | Either 3 or 6 hours of shows                                                                                    | Integer | 3                                |
 | `--pref`       | User Preferences, comma separated list. `m` for showing music, `p` for showing pay-per-view, `h` for showing HD | String  | (empty)                          |
+| `--country`    | Country code (default: `US`)                                                                                    | String  | US                               |
 | `--postalCode` | Postal code of where shows are available.                                                                       | Integer | 30309                            |
 | `--userAgent`  | Custom user agent string for HTTP requests.                                                                     | String  | Uses random if not specified     |
 | `--timezone`   | Timezone                                                                                                        | String  | System default                   |
