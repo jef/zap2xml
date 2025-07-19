@@ -14,11 +14,53 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup release please
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v3
         id: release
         with:
           release-type: node
-
+          changelog-types: |
+            [
+              {
+                  "type": "feat",
+                  "section": "Features",
+                  "hidden": false
+              },
+              {
+                  "type": "fix",
+                  "section": "Bug Fixes",
+                  "hidden": false
+              },
+              {
+                  "type": "chore",
+                  "section": "Miscellaneous",
+                  "hidden": false
+              },
+              {
+                  "type": "ci",
+                  "section": "Continuous Integration",
+                  "hidden": false
+              },
+              {
+                  "type": "docs",
+                  "section": "Documentation",
+                  "hidden": false
+              },
+              {
+                  "type": "refactor",
+                  "section": "Refactoring",
+                  "hidden": false
+              },
+              {
+                  "type": "perf",
+                  "section": "Performance",
+                  "hidden": false
+              },
+              {
+                  "type": "test",
+                  "section": "Tests",
+                  "hidden": false
+              }
+          ]
       - name: Login into GitHub Container Registry
         if: ${{ steps.release.outputs.release_created }}
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
