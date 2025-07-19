@@ -9,7 +9,7 @@ export const config = {
   timespan:
     process.env["TIMESPAN"] ||
     process.argv.find((arg) => arg.startsWith("--timespan="))?.split("=")[1] ||
-    "3",
+    "6",
   country:
     process.env["COUNTRY"] ||
     process.argv.find((arg) => arg.startsWith("--country="))?.split("=")[1] ||

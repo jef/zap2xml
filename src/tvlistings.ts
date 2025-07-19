@@ -78,10 +78,10 @@ export interface GridApiResponse {
   channels: Channel[];
 }
 
-function buildUrl() {
+function buildUrl(time: number, timespan: number): string {
   const params = {
     lineupId: config.lineupId,
-    timespan: config.timespan,
+    timespan: timespan.toString(),
     headendId: "lineupId",
     country: config.country,
     timezone: config.timezone,
@@ -90,7 +90,7 @@ function buildUrl() {
     pref: config.pref + "16,128" || "16,128",
     aid: "orbebb",
     languagecode: "en-us",
-    time: Math.floor(Date.now() / 1000).toString(),
+    time: time.toString(),
   };
 
   const urlParams = new URLSearchParams(params).toString();
@@ -101,19 +101,47 @@ function buildUrl() {
 export async function getTVListings(): Promise<GridApiResponse> {
   console.log("Fetching TV listings");
 
-  const url = buildUrl();
+  const totalHours = parseInt(config.timespan, 10);
+  const chunkHours = 6; // Gracenote allows up to 6 hours per request
+  const now = Math.floor(Date.now() / 1000); // Current time in UNIX timestamp
+  const channelsMap: Map<string, Channel> = new Map();
 
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": config.userAgent || "",
-    },
-  });
+  const fetchPromises: Promise<void>[] = [];
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch: ${response.status} ${response.statusText}`,
-    );
+  for (let offset = 0; offset < totalHours; offset += chunkHours) {
+    const time = now + offset * 3600;
+    const url = buildUrl(time, chunkHours);
+
+    const fetchPromise = fetch(url, {
+      headers: {
+        "User-Agent": config.userAgent || "",
+      },
+    }).then(async (response) => {
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch: ${response.status} ${response.statusText}`
+        );
+      }
+      const chunkData = (await response.json()) as GridApiResponse;
+
+      for (const newChannel of chunkData.channels) {
+        if (!channelsMap.has(newChannel.channelId)) {
+          // Clone channel with its events
+          channelsMap.set(newChannel.channelId, {
+            ...newChannel,
+            events: [...newChannel.events],
+          });
+        } else {
+          const existingChannel = channelsMap.get(newChannel.channelId)!;
+          existingChannel.events.push(...newChannel.events);
+        }
+      }
+    });
+
+    fetchPromises.push(fetchPromise);
   }
 
-  return (await response.json()) as GridApiResponse;
+  await Promise.all(fetchPromises);
+
+  return { channels: Array.from(channelsMap.values()) };
 }
