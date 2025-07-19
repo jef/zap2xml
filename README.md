@@ -12,7 +12,7 @@ Visit the [Retrieving Lineup ID](https://github.com/jef/zap2xml/wiki/Retrieving-
 ### Node.js
 
 ```bash
-npm i && npm run dev
+npm i && npm run build && node dist/index.js
 ```
 
 See [Command line arguments](#command-line-arguments) for configuration options.
