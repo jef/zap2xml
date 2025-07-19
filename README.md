@@ -5,6 +5,10 @@ for the configuration file.
 
 ## How to use
 
+### Retrieving your Lineup ID
+
+Visit the [Retrieving Lineup ID](https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID) in the Wiki.
+
 ### Node.js
 
 ```bash
