@@ -1,7 +1,8 @@
 # zap2xml
 
-See [zap2xml](https://web.archive.org/web/20200426004001/zap2xml.awardspace.info/) for original Perl script and guidance
-for the configuration file.
+Automate TV guides to XMLTV format. Easy to use, up-to-date. See below for getting started.
+
+I also _somewhat_ maintain a version of the original in the [historical-perl branch](https://github.com/jef/zap2xml/tree/historical-perl) if you're interested in that.
 
 ## How to use
 
