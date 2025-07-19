@@ -101,15 +101,17 @@ function buildUrl() {
 export async function getTVListings(): Promise<GridApiResponse> {
   console.log("Fetching TV listings");
 
-  const response = await fetch(buildUrl(), {
+  const url = buildUrl();
+
+  const response = await fetch(url, {
     headers: {
-      "User-Agent": config.userAgent,
+      "User-Agent": config.userAgent || "",
     },
   });
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch: ${response.status} ${response.statusText}`
+      `Failed to fetch: ${response.status} ${response.statusText}`,
     );
   }
 
