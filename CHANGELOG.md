@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.1](https://github.com/jef/zap2xml/compare/v2.1.0...v2.1.1) (2025-07-19)
+
+
+### Documentation
+
+* fix defaults ([a655a3e](https://github.com/jef/zap2xml/commit/a655a3e84c2bc7191803d48d581c20b340f3c4e6))
+* make ref to historical perl ([2756b07](https://github.com/jef/zap2xml/commit/2756b0766f9e62c85cd8b25178763819cfe8cc51))
+
 ## [2.1.0](https://github.com/jef/zap2xml/compare/v2.0.0...v2.1.0) (2025-07-19)
 
 
