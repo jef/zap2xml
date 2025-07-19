@@ -1,8 +1,0 @@
-{
-  "packages": {
-    ".": {
-      "release-type": "simple",
-      "package-name": "zap2xml"
-    }
-  }
-}
