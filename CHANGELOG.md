@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/jef/zap2xml/compare/v2.0.0...v2.1.0) (2025-07-19)
+
+
+### Features
+
+* support upto 15 days of listings ([ee8c32d](https://github.com/jef/zap2xml/commit/ee8c32dfbb319225b181e8c0d956a56e8473d8cd))
+
 ## [2.0.0](https://github.com/jef/zap2xml/compare/v1.0.3...v2.0.0) (2025-07-19)
 
 
