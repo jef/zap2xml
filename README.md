@@ -4,11 +4,6 @@ See [zap2xml](https://web.archive.org/web/20200426004001/zap2xml.awardspace.info
 
 ## Docker
 
-| Tag     | Description             |
-| ------- | ----------------------- |
-| latest  | Stable zap2xml releases |
-| nightly | HEAD zap2xml release    |
-
 ### docker-compose (recommended)
 
 ```yaml
@@ -30,11 +25,11 @@ services:
 
 ### Optional environment variables
 
-| Variable     | Description                                                                        | Type    | Default                                                                                                           |
-| ------------ | ---------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
-| `USER_AGENT` | Custom user agent string for HTTP requests.                                        | String  | `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36` |
-| `SLEEPTIME`  | Number of seconds to sleep between runs (useful for scheduling in Docker or cron). | Integer | `43200`                                                                                                           |
-| `TZ`         | Timezone for program times (affects output XML and Perl's time calculations).      | String  | System default                                                                                                    |
+| Variable     | Description                                                                        | Default                                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `USER_AGENT` | Custom user agent string for HTTP requests.                                        | `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36` |
+| `SLEEPTIME`  | Number of seconds to sleep between runs (useful for scheduling in Docker or cron). | `43200`                                                                                                           |
+| `TZ`         | Timezone for program times (affects output XML and Perl's time calculations).      | System default                                                                                                    |
 
 ### Optional run configurations
 

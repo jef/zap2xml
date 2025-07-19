@@ -20,7 +20,7 @@ ncdays=0
 # ncsdays: Number of days from the start to not cache (default: 0, cmd: -N)
 ncsdays=0
 # ncmday: Specific day number to not cache, 1-based relative to start (default: -1, cmd: -B)
-ncmday=-1
+# ncmday=-1
 
 # Output settings
 # outfile: Output XML file path (default: xmltv.xml or xtvd.xml, cmd: -o)
@@ -40,7 +40,7 @@ trailer=/config/trailers
 
 # Network
 # proxy: HTTP proxy server URL (default: none, cmd: -P)
-proxy=http://localhost:8080
+# proxy=http://localhost:8080
 
 # XTVD format settings (only used when outformat=xtvd)
 # lineuptype: Type of lineup - Cable/CableDigital/Satellite/LocalBroadcast (default: none)

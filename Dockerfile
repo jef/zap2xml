@@ -1,6 +1,4 @@
-FROM alpine:3.13.5
-
-ENV SLEEPTIME=43200
+FROM alpine:3.22.1
 
 RUN apk add --no-cache \
   perl \

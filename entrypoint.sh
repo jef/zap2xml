@@ -1,5 +1,7 @@
 #!/bin/sh
 
+SLEEPTIME=43200
+
 while true; do
 	DATE=$(date)
 	eval /opt/zap2xml.pl "$OPT_ARGS"
