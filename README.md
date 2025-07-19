@@ -46,7 +46,7 @@ See [Environment variables](#environment-variables) for configuration options.
 
 | Variable      | Description                                                                                                     | Type    | Default                          |
 | ------------- | --------------------------------------------------------------------------------------------------------------- | ------- | -------------------------------- |
-| `LINEUP_ID`   | Lineup ID; You can find this at https://tvlistings.gracenote.com/grid-affiliates.html?aid=orbebb                | String  | `USA-lineupId-DEFAULT` (Attenna) |
+| `LINEUP_ID`   | Lineup ID; Read more in the [Wiki](https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID)                    | String  | `USA-lineupId-DEFAULT` (Attenna) |
 | `TIMESPAN`    | Either 3 or 6 hours of shows                                                                                    | Integer | 3                                |
 | `PREF`        | User Preferences, comma separated list. `m` for showing music, `p` for showing pay-per-view, `h` for showing HD | String  | (empty)                          |
 | `COUNTRY`     | Country code (default: `US`)                                                                                    | String  | US                               |
@@ -60,7 +60,7 @@ See [Environment variables](#environment-variables) for configuration options.
 
 | Argument       | Description                                                                                                     | Type    | Default                          |
 | -------------- | --------------------------------------------------------------------------------------------------------------- | ------- | -------------------------------- |
-| `--lineupId`   | Lineup ID; You can find this at https://tvlistings.gracenote.com/grid-affiliates.html?aid=orbebb                | String  | `USA-lineupId-DEFAULT` (Attenna) |
+| `--lineupId`   | Lineup ID; Read more in the [Wiki](https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID)                    | String  | `USA-lineupId-DEFAULT` (Attenna) |
 | `--timespan`   | Either 3 or 6 hours of shows                                                                                    | Integer | 3                                |
 | `--pref`       | User Preferences, comma separated list. `m` for showing music, `p` for showing pay-per-view, `h` for showing HD | String  | (empty)                          |
 | `--country`    | Country code (default: `US`)                                                                                    | String  | US                               |
