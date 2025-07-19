@@ -1,19 +1,18 @@
-FROM alpine:3.13.5
+FROM node:22.17.1-alpine3.22
 
-ENV SLEEPTIME=43200
+WORKDIR /app
 
-RUN apk add --no-cache \
-  perl \
-  perl-http-cookies \
-  perl-lwp-useragent-determined \
-  perl-json \
-  perl-json-xs \
-  perl-lwp-protocol-https \
-  perl-gd
+COPY package.json package.json
+COPY package-lock.json package-lock.json
 
-WORKDIR /opt
+RUN npm ci
 
-COPY zap2xml.pl zap2xml.pl
+COPY tsconfig.json tsconfig.json
 COPY entrypoint.sh entrypoint.sh
+COPY src/ src/
 
-ENTRYPOINT ["./entrypoint.sh"]
+RUN npm run build
+
+RUN ls -l /app
+
+ENTRYPOINT ["/bin/sh", "-c", "/app/entrypoint.sh"]

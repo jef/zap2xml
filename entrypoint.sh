@@ -1,9 +1,11 @@
 #!/bin/sh
 
+SLEEP_TIME=${SLEEP_TIME:-10800}
+
 while true; do
-	DATE=$(date)
-	eval /opt/zap2xml.pl "$OPT_ARGS"
-	echo "Last run time: $DATE"
-	echo "Will run in $SLEEPTIME seconds"
-	sleep "$SLEEPTIME"
+    DATE=$(date)
+    node build/src/index.js
+    echo "Last run time: $DATE"
+    echo "Will run in $((SLEEP_TIME / 60)) minutes"
+    sleep "$SLEEP_TIME"
 done

@@ -1,4 +1,6 @@
-.zap2xmlrc
+build/
+node_modules/
 
-config/
-xmltv/
+compose.yaml
+
+xmltv.xml
