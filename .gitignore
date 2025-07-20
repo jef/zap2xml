@@ -3,3 +3,4 @@ compose.yaml
 
 config/
 xmltv/
+node_modules/
