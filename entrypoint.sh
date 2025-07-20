@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SLEEP_TIME=${SLEEP_TIME:-10800}
+SLEEP_TIME=${SLEEP_TIME:-21600}
 
 while true; do
     DATE=$(date)
