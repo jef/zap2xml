@@ -6,10 +6,6 @@ I also _somewhat_ maintain a version of the original in the [historical-perl bra
 
 ## How to use
 
-### Retrieving your Lineup ID
-
-Visit the [Retrieving Lineup ID](https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID) in the Wiki.
-
 ### Node.js
 
 ```bash
@@ -87,3 +83,9 @@ If you want to run zap2xml in intervals, you can use a task scheduler like `cron
 ### Running in Docker
 
 You can run zap2xml in a Docker container. The `SLEEP_TIME` environment variable can be used to set the interval between runs. The default is 21600 seconds (6 hours).
+
+## FAQ
+
+### How do I get my Lineup ID?
+
+Visit https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID
