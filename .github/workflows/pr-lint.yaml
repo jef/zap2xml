@@ -1,0 +1,19 @@
+name: Pull Request Title Linter
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+jobs:
+  pr_lint:
+    name: Lint pull request title
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Lint pull request title
+        uses: jef/conventional-commits-pr-action@v1

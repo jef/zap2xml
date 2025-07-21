@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💡 Have an idea for a new feature?
+    url: https://github.com/jef/zap2xml/discussions
+    about: Create a new idea discussion!
+  - name: 🙇 Need help?
+    url: https://github.com/jef/zap2xml/discussions
+    about: Create a new help discussion if it hasn't been asked before!
