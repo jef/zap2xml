@@ -8,6 +8,7 @@ COPY package-lock.json package-lock.json
 RUN npm ci
 
 COPY tsconfig.json tsconfig.json
+COPY rollup.config.ts rollup.config.ts
 COPY entrypoint.sh entrypoint.sh
 COPY src/ src/
 
