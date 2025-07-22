@@ -28,8 +28,6 @@ async function main() {
   try {
     isHelp();
 
-    console.log("all args", process.argv);
-
     const data = await getTVListings();
     const xml = buildXmltv(data);
 

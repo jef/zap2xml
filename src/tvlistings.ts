@@ -97,8 +97,6 @@ function buildUrl(time: number, timespan: number): string {
 
   const urlParams = new URLSearchParams(params).toString();
 
-  console.log(`${config.baseUrl}?${urlParams}`);
-
   return `${config.baseUrl}?${urlParams}`;
 }
 
