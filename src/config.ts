@@ -1,6 +1,6 @@
 import { UserAgent } from "./useragents.js";
 
-function processLineupId(): string {
+export function processLineupId(): string {
   const lineupId =
     process.env["LINEUP_ID"] ||
     process.argv.find((arg) => arg.startsWith("--lineupId="))?.split("=")[1] ||
@@ -13,7 +13,11 @@ function processLineupId(): string {
   return lineupId;
 }
 
-function getHeadendId(lineupId: string): string {
+export function getHeadendId(lineupId: string): string {
+  if (lineupId.includes("OTA")) {
+    return "lineupId";
+  }
+
   const match = lineupId.match(/^(USA|CAN)-(.*?)(?:-[A-Z]+)?$/);
 
   return match?.[2] || "lineup";
