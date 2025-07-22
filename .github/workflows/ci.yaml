@@ -39,3 +39,32 @@ jobs:
 
       - name: Test
         run: npm run test:run
+
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    needs: build-lint-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run integration tests
+        run: |
+          node dist/index.js --linupId=USA-DITV751-X --timespan=3 --postal-code=80020 --outputFile=dtv.xml
+          node dist/index.js --linupId=USA-OTA80020 --timespan=3 --postal-code=80020 --outputFile=ota.xml
+
+          if cmp -s dtv.xml ota.xml; then
+            echo "DTV and OTA XML files are identical, which is unexpected."
+            exit 1
+          else

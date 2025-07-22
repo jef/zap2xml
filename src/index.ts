@@ -1,7 +1,9 @@
 import { writeFileSync } from "node:fs";
 import { getTVListings } from "./tvlistings.js";
 import { buildXmltv } from "./xmltv.js";
-import { config } from "./config.js";
+import { getConfig } from "./config.js";
+
+const config = getConfig();
 
 function isHelp() {
   if (process.argv.includes("--help")) {
@@ -25,6 +27,8 @@ Options:
 async function main() {
   try {
     isHelp();
+
+    console.log("all args", process.argv);
 
     const data = await getTVListings();
     const xml = buildXmltv(data);
