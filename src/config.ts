@@ -1,14 +1,32 @@
 import { UserAgent } from "./useragents.js";
 
+function processLineupId(): string {
+  const lineupId =
+    process.env["LINEUP_ID"] ||
+    process.argv.find((arg) => arg.startsWith("--lineupId="))?.split("=")[1] ||
+    "USA-lineupId-DEFAULT";
+
+  if (lineupId.includes("OTA")) {
+    return "USA-lineupId-DEFAULT";
+  }
+
+  return lineupId;
+}
+
+function getHeadendId(lineupId: string): string {
+  const match = lineupId.match(/^(USA|CAN)-(.*?)(?:-[A-Z]+)?$/);
+
+  return match?.[2] || "lineup";
+}
+
 export function getConfig() {
+  const lineupId = processLineupId();
+  const headendId = getHeadendId(lineupId);
+
   return {
     baseUrl: "https://tvlistings.gracenote.com/api/grid",
-    lineupId:
-      process.env["LINEUP_ID"] ||
-      process.argv
-        .find((arg) => arg.startsWith("--lineupId="))
-        ?.split("=")[1] ||
-      "USA-lineupId-DEFAULT",
+    lineupId,
+    headendId,
     timespan:
       process.env["TIMESPAN"] ||
       process.argv

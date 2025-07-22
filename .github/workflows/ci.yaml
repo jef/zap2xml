@@ -61,10 +61,11 @@ jobs:
 
       - name: Run integration tests
         run: |
-          node dist/index.js --linupId=USA-DITV751-X --timespan=3 --postal-code=80020 --outputFile=dtv.xml
-          node dist/index.js --linupId=USA-OTA80020 --timespan=3 --postal-code=80020 --outputFile=ota.xml
+          node dist/index.js --lineupId=USA-DITV751-X --timespan=3 --postalCode=80020 --outputFile=dtv.xml
+          node dist/index.js --lineupId=USA-OTA80020 --timespan=3 --postalCode=80020 --outputFile=ota.xml
 
+          # Error if they are the same
           if cmp -s dtv.xml ota.xml; then
-            echo "DTV and OTA XML files are identical, which is unexpected."
+            echo "DTV and OTA outputs are the same, which is unexpected."
             exit 1
-          else
+          fi

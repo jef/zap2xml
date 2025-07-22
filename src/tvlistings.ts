@@ -84,7 +84,7 @@ function buildUrl(time: number, timespan: number): string {
   const params = {
     lineupId: config.lineupId,
     timespan: timespan.toString(),
-    headendId: "lineupId",
+    headendId: config.headendId,
     country: config.country,
     timezone: config.timezone,
     postalCode: config.postalCode,
@@ -93,6 +93,8 @@ function buildUrl(time: number, timespan: number): string {
     aid: "orbebb",
     languagecode: "en-us",
     time: time.toString(),
+    device: "X",
+    userId: "-",
   };
 
   const urlParams = new URLSearchParams(params).toString();
