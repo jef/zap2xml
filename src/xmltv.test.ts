@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { GridApiResponse } from "./tvlistings.js";
 import {
   buildChannelsXml,
-  buildProgrammesXml,
+  buildProgramsXml,
   buildXmltv,
   escapeXml,
   formatDate,
@@ -57,7 +57,9 @@ describe("buildXmltv", () => {
   it("should generate valid XML structure", () => {
     const result = buildXmltv(mockData);
     expect(result).toContain('<?xml version="1.0" encoding="UTF-8"?>');
-    expect(result).toContain('<tv generator-info-name="zap2it-grid">');
+    expect(result).toContain(
+      '<tv generator-info-name="jef/zap2xml" generator-info-url="https://github.com/jef/zap2xml">',
+    );
     expect(result).toContain("</tv>");
   });
 
@@ -85,14 +87,16 @@ describe("buildXmltv", () => {
 
   it("should include rating information", () => {
     const result = buildXmltv(mockData);
-    expect(result).toContain("<rating><value>TV-PG</value></rating>");
+    expect(result).toContain(
+      '<rating system="MPAA"><value>TV-PG</value></rating>',
+    );
   });
 
   it("should include categories from flags and tags", () => {
     const result = buildXmltv(mockData);
-    expect(result).toContain("<category>New</category>");
-    expect(result).toContain("<category>Stereo</category>");
-    expect(result).toContain("<category>CC</category>");
+    expect(result).toContain("<new />");
+    expect(result).toContain('<audio type="stereo" />');
+    expect(result).toContain('<audio type="cc" />');
   });
 
   it("should include episode information", () => {
@@ -108,7 +112,9 @@ describe("buildXmltv", () => {
     const emptyData: GridApiResponse = { channels: [] };
     const result = buildXmltv(emptyData);
     expect(result).toContain('<?xml version="1.0" encoding="UTF-8"?>');
-    expect(result).toContain('<tv generator-info-name="zap2it-grid">');
+    expect(result).toContain(
+      '<tv generator-info-name="jef/zap2xml" generator-info-url="https://github.com/jef/zap2xml">',
+    );
     expect(result).toContain("</tv>");
     expect(result).not.toContain("<channel");
     expect(result).not.toContain("<programme");
@@ -252,9 +258,9 @@ describe("buildChannelsXml", () => {
   });
 });
 
-describe("buildProgrammesXml", () => {
+describe("buildProgramsXml", () => {
   it("should build programme XML correctly", () => {
-    const result = buildProgrammesXml(mockData);
+    const result = buildProgramsXml(mockData);
     expect(result).toContain(
       '<programme start="20250718190000 +0000" stop="20250718200000 +0000" channel="19629">',
     );
@@ -263,16 +269,20 @@ describe("buildProgrammesXml", () => {
     expect(result).toContain(
       "<desc>BIA performs; comic Zarna Garg; lifestyle contributor Lori Bergamotto; ABC News chief medical correspondent Dr. Tara Narula.</desc>",
     );
-    expect(result).toContain("<rating><value>TV-PG</value></rating>");
-    expect(result).toContain("<category>New</category>");
-    expect(result).toContain("<category>Stereo</category>");
-    expect(result).toContain("<category>CC</category>");
+    expect(result).toContain(
+      '<rating system="MPAA"><value>TV-PG</value></rating>',
+    );
+    expect(result).toContain("<new />");
+    expect(result).toContain('<audio type="stereo" />');
+    expect(result).toContain('<audio type="cc" />');
     expect(result).toContain('<episode-num system="season">5</episode-num>');
     expect(result).toContain('<episode-num system="episode">217</episode-num>');
     expect(result).toContain(
       '<episode-num system="series">SH05918266</episode-num>',
     );
-    expect(result).toContain('<icon src="p30687311_b_v13_aa" />');
+    expect(result).toContain(
+      '<icon src="https://zap2it.tmsimg.com/assets/p30687311_b_v13_aa.jpg" />',
+    );
   });
 
   it("should handle programmes without optional fields", () => {
@@ -318,7 +328,7 @@ describe("buildProgrammesXml", () => {
         },
       ],
     };
-    const result = buildProgrammesXml(minimalProgramme);
+    const result = buildProgramsXml(minimalProgramme);
     expect(result).toContain(
       '<programme start="20250718190000 +0000" stop="20250718193000 +0000" channel="123">',
     );

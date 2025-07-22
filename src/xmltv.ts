@@ -55,7 +55,7 @@ export function buildChannelsXml(data: GridApiResponse): string {
   return xml;
 }
 
-export function buildProgrammesXml(data: GridApiResponse): string {
+export function buildProgramsXml(data: GridApiResponse): string {
   let xml = "";
 
   for (const channel of data.channels) {
@@ -79,20 +79,23 @@ export function buildProgrammesXml(data: GridApiResponse): string {
       }
 
       if (event.rating) {
-        xml += `    <rating><value>${escapeXml(
+        xml += `    <rating system="MPAA"><value>${escapeXml(
           event.rating,
         )}</value></rating>\n`;
       }
 
       if (event.flag && event.flag.length > 0) {
-        for (const flag of event.flag) {
-          xml += `    <category>${escapeXml(flag)}</category>\n`;
+        if (event.flag.includes("New")) {
+          xml += `    <new />\n`;
         }
       }
 
       if (event.tags && event.tags.length > 0) {
-        for (const tag of event.tags) {
-          xml += `    <category>${escapeXml(tag)}</category>\n`;
+        if (event.tags.includes("Stereo")) {
+          xml += `    <audio type="stereo" />\n`;
+        }
+        if (event.tags.includes("CC")) {
+          xml += `    <audio type="cc" />\n`;
         }
       }
 
@@ -114,6 +117,13 @@ export function buildProgrammesXml(data: GridApiResponse): string {
         )}</episode-num>\n`;
       }
 
+      // S01E01 and S11E22
+      if (event.program.season && event.program.episode) {
+        xml += `    <episode-num system="onscreen">${escapeXml(
+          `S${event.program.season.padStart(2, "0")}E${event.program.episode.padStart(2, "0")}`,
+        )}</episode-num>\n`;
+      }
+
       if (event.thumbnail) {
         const src = event.thumbnail.startsWith("http")
           ? event.thumbnail
@@ -131,10 +141,11 @@ export function buildProgrammesXml(data: GridApiResponse): string {
 export function buildXmltv(data: GridApiResponse): string {
   console.log("Building XMLTV file");
 
-  let xml =
-    '<?xml version="1.0" encoding="UTF-8"?>\n<tv generator-info-name="zap2it-grid">\n';
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml +=
+    '<tv generator-info-name="jef/zap2xml" generator-info-url="https://github.com/jef/zap2xml">\n';
   xml += buildChannelsXml(data);
-  xml += buildProgrammesXml(data);
+  xml += buildProgramsXml(data);
   xml += "</tv>\n";
 
   return xml;
