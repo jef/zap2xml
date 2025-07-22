@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -37,5 +38,16 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
+      - name: Unit tests
         run: npm run test:run
+
+      - name: Integration tests
+        run: |
+          node dist/index.js --lineupId=USA-DITV751-X --timespan=3 --postalCode=80020 --outputFile=dtv.xml
+          node dist/index.js --lineupId=USA-OTA80020 --timespan=3 --postalCode=80020 --outputFile=ota.xml
+
+          # Error if they are the same
+          if cmp -s dtv.xml ota.xml; then
+            echo "DTV and OTA outputs are the same, which is unexpected."
+            exit 1
+          fi

@@ -1,4 +1,6 @@
-import { config } from "./config.js";
+import { getConfig } from "./config.js";
+
+const config = getConfig();
 
 export interface Program {
   /** "title": "GMA3" */
@@ -82,7 +84,7 @@ function buildUrl(time: number, timespan: number): string {
   const params = {
     lineupId: config.lineupId,
     timespan: timespan.toString(),
-    headendId: "lineupId",
+    headendId: config.headendId,
     country: config.country,
     timezone: config.timezone,
     postalCode: config.postalCode,
@@ -91,6 +93,8 @@ function buildUrl(time: number, timespan: number): string {
     aid: "orbebb",
     languagecode: "en-us",
     time: time.toString(),
+    device: "X",
+    userId: "-",
   };
 
   const urlParams = new URLSearchParams(params).toString();
@@ -119,7 +123,7 @@ export async function getTVListings(): Promise<GridApiResponse> {
     }).then(async (response) => {
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch: ${response.status} ${response.statusText}`
+          `Failed to fetch: ${response.status} ${response.statusText}`,
         );
       }
       const chunkData = (await response.json()) as GridApiResponse;
