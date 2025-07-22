@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.2.0](https://github.com/jef/zap2xml/compare/v2.1.1...v2.2.0) (2025-07-22)
+
+
+### Features
+
+* update rating, new, stereo, and cc ([e077f27](https://github.com/jef/zap2xml/commit/e077f2721c78d278db14037776ebdeb4cdee660d))
+
+
+### Bug Fixes
+
+* add thumbnails for programs ([3ab0370](https://github.com/jef/zap2xml/commit/3ab0370d725c029d64441febb981eeec04f2e1ef))
+* args work now ([#54](https://github.com/jef/zap2xml/issues/54)) ([ad7aa8e](https://github.com/jef/zap2xml/commit/ad7aa8e5815b80f6fcb5ae118f29281d481e03d1))
+* headendId when OTA, add tests ([1696b15](https://github.com/jef/zap2xml/commit/1696b15712753039d896a6fcbe3145331f9b5b76))
+
+
+### Continuous Integration
+
+* clean up and conventions ([#52](https://github.com/jef/zap2xml/issues/52)) ([60321a3](https://github.com/jef/zap2xml/commit/60321a37e6410f120be4c8198d39896b8ebea017))
+
+
+### Documentation
+
+* add FAQ ([4ac37de](https://github.com/jef/zap2xml/commit/4ac37de08e6e4adaeb060465a246558bdc6c2bb7))
+* include so links to wiki, update SLEEP_TIME default ([b5cec7c](https://github.com/jef/zap2xml/commit/b5cec7c951da794041820407860bcee8e0c5b24a))
+
 ## [2.1.1](https://github.com/jef/zap2xml/compare/v2.1.0...v2.1.1) (2025-07-19)
 
 
