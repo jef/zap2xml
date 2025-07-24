@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/jef/zap2xml/compare/v2.2.0...v2.2.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* series and episode info ([6e6fa26](https://github.com/jef/zap2xml/commit/6e6fa26b75c3b47f9e29f3131daabac0401144c0))
+
 ## [2.2.0](https://github.com/jef/zap2xml/compare/v2.1.1...v2.2.0) (2025-07-22)
 
 
