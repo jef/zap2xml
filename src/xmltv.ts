@@ -88,6 +88,28 @@ export function buildProgramsXml(data: GridApiResponse): string {
         if (event.flag.includes("New")) {
           xml += `    <new />\n`;
         }
+
+        if (event.flag.includes("Live")) {
+          xml += `    <live />\n`;
+        }
+
+        if (event.flag.includes("Premiere")) {
+          xml += `    <premiere />\n`;
+        }
+
+        if (event.flag.includes("Finale")) {
+          xml += `    <last-chance />\n`;
+        }
+      }
+
+      if (
+        !event.flag ||
+        (event.flag &&
+          event.flag.length > 0 &&
+          !event.flag.includes("New") &&
+          !event.flag.includes("Live"))
+      ) {
+        xml += `    <previously-shown />\n`;
       }
 
       if (event.tags && event.tags.length > 0) {
@@ -95,33 +117,26 @@ export function buildProgramsXml(data: GridApiResponse): string {
           xml += `    <audio type="stereo" />\n`;
         }
         if (event.tags.includes("CC")) {
-          xml += `    <audio type="cc" />\n`;
+          xml += `    <subtitles type="teletext" />\n`;
         }
       }
 
-      if (event.program.season) {
-        xml += `    <episode-num system="season">${escapeXml(
-          event.program.season,
-        )}</episode-num>\n`;
-      }
-
-      if (event.program.episode) {
-        xml += `    <episode-num system="episode">${escapeXml(
-          event.program.episode,
-        )}</episode-num>\n`;
-      }
-
-      if (event.program.seriesId) {
-        xml += `    <episode-num system="series">${escapeXml(
-          event.program.seriesId,
-        )}</episode-num>\n`;
-      }
-
-      // S01E01 and S11E22
       if (event.program.season && event.program.episode) {
         xml += `    <episode-num system="onscreen">${escapeXml(
           `S${event.program.season.padStart(2, "0")}E${event.program.episode.padStart(2, "0")}`,
         )}</episode-num>\n`;
+
+        xml += `    <episode-num system="common">${escapeXml(
+          `S${event.program.season.padStart(2, "0")}E${event.program.episode.padStart(2, "0")}`,
+        )}</episode-num>\n`;
+
+        if (/..\d{8}\d{4}/.test(event.program.id)) {
+          xml += `    <episode-num system="dd_progid">${escapeXml(event.program.id)}</episode-num>\n`;
+        }
+
+        xml += `    <episode-num system="xmltv_ns">${escapeXml(
+          `${event.program.season} . ${event.program.episode}`,
+        )}.</episode-num>\n`;
       }
 
       if (event.thumbnail) {
