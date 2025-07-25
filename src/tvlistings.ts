@@ -73,7 +73,7 @@ export interface Channel {
   stationGenres: boolean[];
   /** "stationFilters": ["filter-news", "filter-talk"] */
   stationFilters: string[];
-  /** "thumbnail": "//zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png?w=55" */
+  /** "thumbnail": "//zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png" */
   thumbnail: string;
 }
 
