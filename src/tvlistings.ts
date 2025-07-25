@@ -23,6 +23,8 @@ export interface Program {
   seriesId: string;
   /** "isGeneric": "0" */
   isGeneric: string;
+  /** Add this if originalAirDate exists in your data */
+  originalAirDate?: string;
 }
 
 export interface Event {
