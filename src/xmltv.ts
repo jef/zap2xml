@@ -58,6 +58,14 @@ export function buildChannelsXml(data: GridApiResponse): string {
 export function buildProgramsXml(data: GridApiResponse): string {
   let xml = "";
 
+  const matchesPreviouslyShownPattern = (programId: string): boolean => {
+    return /^EP|^SH|^\d/.test(programId);
+  };
+
+  const convOAD = (originalAirDate: string): string => {
+    return originalAirDate.replace(/-/g, "");
+  };
+
   for (const channel of data.channels) {
     for (const event of channel.events) {
       xml += `  <programme start="${formatDate(
@@ -84,32 +92,31 @@ export function buildProgramsXml(data: GridApiResponse): string {
         )}</value></rating>\n`;
       }
 
-      if (event.flag && event.flag.length > 0) {
-        if (event.flag.includes("New")) {
-          xml += `    <new />\n`;
-        }
+      const isNew = event.flag?.includes("New");
+      const isLive = event.flag?.includes("Live");
 
-        if (event.flag.includes("Live")) {
-          xml += `    <live />\n`;
-        }
-
-        if (event.flag.includes("Premiere")) {
-          xml += `    <premiere />\n`;
-        }
-
-        if (event.flag.includes("Finale")) {
-          xml += `    <last-chance />\n`;
-        }
+      if (isNew) {
+        xml += `    <new />\n`;
+      }
+      if (isLive) {
+        xml += `    <live />\n`;
+      }
+      if (event.flag?.includes("Premiere")) {
+        xml += `    <premiere />\n`;
+      }
+      if (event.flag?.includes("Finale")) {
+        xml += `    <last-chance />\n`;
       }
 
       if (
-        !event.flag ||
-        (event.flag &&
-          event.flag.length > 0 &&
-          !event.flag.includes("New") &&
-          !event.flag.includes("Live"))
+        !isNew && !isLive && event.program.id && matchesPreviouslyShownPattern(event.program.id)
       ) {
-        xml += `    <previously-shown />\n`;
+        xml += `    <previously-shown`;
+        if (event.program.originalAirDate) {
+          const date = convOAD(event.program.originalAirDate);
+          xml += ` start="${date}000000"`;
+        }
+        xml += ` />\n`;
       }
 
       if (event.tags && event.tags.length > 0) {
@@ -134,9 +141,17 @@ export function buildProgramsXml(data: GridApiResponse): string {
           xml += `    <episode-num system="dd_progid">${escapeXml(event.program.id)}</episode-num>\n`;
         }
 
-        xml += `    <episode-num system="xmltv_ns">${escapeXml(
-          `${event.program.season} . ${event.program.episode}`,
-        )}.</episode-num>\n`;
+        const seasonNum = parseInt(event.program.season, 10);
+        const episodeNum = parseInt(event.program.episode, 10);
+
+        // Apply zero-based indexing for xmltv_ns
+        if (
+          !isNaN(seasonNum) && !isNaN(episodeNum) &&
+          seasonNum >= 1 && // Ensure season is at least 1 for zero-based conversion
+          episodeNum >= 1   // Ensure episode is at least 1 for zero-based conversion
+        ) {
+          xml += `    <episode-num system="xmltv_ns">${seasonNum - 1}.${episodeNum - 1}.</episode-num>\n`;
+        }
       }
 
       if (event.thumbnail) {
