@@ -1,4 +1,5 @@
-import type { GridApiResponse } from "./tvlistings.js";
+// xmltv.ts
+import type { GridApiResponse } from "./tvlistings.js"; // Make sure this path is correct
 
 export function escapeXml(unsafe: string): string {
   return unsafe
@@ -58,6 +59,14 @@ export function buildChannelsXml(data: GridApiResponse): string {
 export function buildProgramsXml(data: GridApiResponse): string {
   let xml = "";
 
+  const matchesPreviouslyShownPattern = (programId: string): boolean => {
+    return /^EP|^SH|^\d/.test(programId);
+  };
+
+  const convOAD = (originalAirDate: string): string => {
+    return originalAirDate.replace(/-/g, "");
+  };
+
   for (const channel of data.channels) {
     for (const event of channel.events) {
       xml += `  <programme start="${formatDate(
@@ -78,38 +87,47 @@ export function buildProgramsXml(data: GridApiResponse): string {
         xml += `    <desc>${escapeXml(event.program.shortDesc)}</desc>\n`;
       }
 
+      // --- THIS IS THE CRITICAL BLOCK THAT MUST BE PRESENT AND UNCHANGED ---
+      if (event.program.genres && event.program.genres.length > 0) {
+        const sortedGenres = [...event.program.genres].sort((a, b) => a.localeCompare(b));
+        for (const genre of sortedGenres) {
+          const capitalizedGenre = genre.charAt(0).toUpperCase() + genre.slice(1);
+          xml += `    <category lang="en">${escapeXml(capitalizedGenre)}</category>\n`;
+        }
+      }
+      // ---------------------------------------------------------------------
+
       if (event.rating) {
         xml += `    <rating system="MPAA"><value>${escapeXml(
           event.rating,
         )}</value></rating>\n`;
       }
 
-      if (event.flag && event.flag.length > 0) {
-        if (event.flag.includes("New")) {
-          xml += `    <new />\n`;
-        }
+      const isNew = event.flag?.includes("New");
+      const isLive = event.flag?.includes("Live");
 
-        if (event.flag.includes("Live")) {
-          xml += `    <live />\n`;
-        }
-
-        if (event.flag.includes("Premiere")) {
-          xml += `    <premiere />\n`;
-        }
-
-        if (event.flag.includes("Finale")) {
-          xml += `    <last-chance />\n`;
-        }
+      if (isNew) {
+        xml += `    <new />\n`;
+      }
+      if (isLive) {
+        xml += `    <live />\n`;
+      }
+      if (event.flag?.includes("Premiere")) {
+        xml += `    <premiere />\n`;
+      }
+      if (event.flag?.includes("Finale")) {
+        xml += `    <last-chance />\n`;
       }
 
       if (
-        !event.flag ||
-        (event.flag &&
-          event.flag.length > 0 &&
-          !event.flag.includes("New") &&
-          !event.flag.includes("Live"))
+        !isNew && !isLive && event.program.id && matchesPreviouslyShownPattern(event.program.id)
       ) {
-        xml += `    <previously-shown />\n`;
+        xml += `    <previously-shown`;
+        if (event.program.originalAirDate) {
+          const date = convOAD(event.program.originalAirDate);
+          xml += ` start="${date}000000"`;
+        }
+        xml += ` />\n`;
       }
 
       if (event.tags && event.tags.length > 0) {
@@ -134,9 +152,17 @@ export function buildProgramsXml(data: GridApiResponse): string {
           xml += `    <episode-num system="dd_progid">${escapeXml(event.program.id)}</episode-num>\n`;
         }
 
-        xml += `    <episode-num system="xmltv_ns">${escapeXml(
-          `${event.program.season} . ${event.program.episode}`,
-        )}.</episode-num>\n`;
+        const seasonNum = parseInt(event.program.season, 10);
+        const episodeNum = parseInt(event.program.episode, 10);
+
+        // Apply zero-based indexing for xmltv_ns
+        if (
+          !isNaN(seasonNum) && !isNaN(episodeNum) &&
+          seasonNum >= 1 &&
+          episodeNum >= 1
+        ) {
+          xml += `    <episode-num system="xmltv_ns">${seasonNum - 1}.${episodeNum - 1}.</episode-num>\n`;
+        }
       }
 
       if (event.thumbnail) {

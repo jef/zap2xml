@@ -64,6 +64,7 @@ See [Environment variables](#environment-variables) for configuration options.
 | `--postalCode` | Postal code of where shows are available.                                                                       | 30309                            |
 | `--userAgent`  | Custom user agent string for HTTP requests.                                                                     | Uses random if not specified     |
 | `--timezone`   | Timezone                                                                                                        | System default                   |
+| `--includeSeriesGenre`   | Add `<category>Series</category>` to programs without a category                                      |                                  |
 | `--outputFile` | Output file name (default: xmltv.xml)                                                                           | xmltv.xml                        |
 
 ## Setup and running in intervals

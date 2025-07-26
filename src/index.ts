@@ -19,6 +19,7 @@ Options:
 --postalCode=ZIP Postal code (default: 30309)
 --userAgent=UA   Custom user agent string (default: Uses random if not specified)
 --timezone=TZ    Timezone (default: America/New_York)
+--includeSeriesGenre Add "series" category to all non-movie programs if no other category is found
 `);
     process.exit(0);
   }
@@ -28,13 +29,14 @@ async function main() {
   try {
     isHelp();
 
+    // getTVListings now internally uses 'config', so no arguments needed here
     const data = await getTVListings();
     const xml = buildXmltv(data);
 
-    console.log("Writing XMLTV file");
     writeFileSync(config.outputFile, xml, { encoding: "utf-8" });
   } catch (err) {
-    console.error("Error fetching GridApiResponse:", err);
+    console.error("Error fetching or building XMLTV:", err);
+    process.exit(1); // Exit with a non-zero code to indicate an error
   }
 }
 

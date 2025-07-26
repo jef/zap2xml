@@ -64,5 +64,9 @@ export function getConfig() {
         .find((arg) => arg.startsWith("--outputFile="))
         ?.split("=")[1] ||
       "xmltv.xml",
+    // Updated to check for --includeSeriesGenre
+    includeSeriesGenre:
+      process.env["INCLUDE_SERIES_GENRE"] === "true" ||
+      process.argv.includes("--includeSeriesGenre"),
   };
 }
