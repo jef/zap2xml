@@ -25,6 +25,8 @@ export interface Program {
   isGeneric: string;
   /** Add this if originalAirDate exists in your data */
   originalAirDate?: string;
+  /** Genres extracted from filter or details */
+  genres?: string[];
 }
 
 export interface Event {
@@ -41,7 +43,7 @@ export interface Event {
   /** "channelNo": "4.1" */
   channelNo: string;
   /** "filter": ["filter-news"] */
-  filter: string[];
+  filter?: string[];
   /** "seriesId": "SH05918266" */
   seriesId: string;
   /** "rating": "TV-PG" */
@@ -105,11 +107,9 @@ function buildUrl(time: number, timespan: number): string {
 }
 
 export async function getTVListings(): Promise<GridApiResponse> {
-  console.log("Fetching TV listings");
-
   const totalHours = parseInt(config.timespan, 10);
-  const chunkHours = 6; // Gracenote allows up to 6 hours per request
-  const now = Math.floor(Date.now() / 1000); // Current time in UNIX timestamp
+  const chunkHours = 6;
+  const now = Math.floor(Date.now() / 1000);
   const channelsMap: Map<string, Channel> = new Map();
 
   const fetchPromises: Promise<void>[] = [];
@@ -122,27 +122,66 @@ export async function getTVListings(): Promise<GridApiResponse> {
       headers: {
         "User-Agent": config.userAgent || "",
       },
-    }).then(async (response) => {
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch: ${response.status} ${response.statusText}`,
-        );
-      }
-      const chunkData = (await response.json()) as GridApiResponse;
-
-      for (const newChannel of chunkData.channels) {
-        if (!channelsMap.has(newChannel.channelId)) {
-          // Clone channel with its events
-          channelsMap.set(newChannel.channelId, {
-            ...newChannel,
-            events: [...newChannel.events],
-          });
-        } else {
-          const existingChannel = channelsMap.get(newChannel.channelId)!;
-          existingChannel.events.push(...newChannel.events);
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          // Keep critical error logging for failed fetches, but remove debug noise
+          const errorBody = await response.text();
+          throw new Error(
+            `Failed to fetch URL ${url}: ${response.status} ${response.statusText} - ${errorBody.substring(0, 200)}...`,
+          );
         }
-      }
-    });
+        return response.json() as Promise<GridApiResponse>;
+      })
+      .then((chunkData: GridApiResponse) => {
+        for (const newChannel of chunkData.channels) {
+          const processedEvents = newChannel.events.map(event => {
+            const newProgram = { ...event.program };
+            const currentGenres = new Set<string>(newProgram.genres || []);
+
+            // Process genres from event.filter first
+            if (event.filter && event.filter.length > 0) {
+              event.filter.forEach(filterTag => {
+                const genre = filterTag.replace(/filter-/i, '').toLowerCase();
+                if (genre) {
+                  currentGenres.add(genre);
+                }
+              });
+            }
+
+            // Apply the --includeSeriesGenre logic:
+            // Add 'series' ONLY if the option is enabled,
+            // AND it's not a movie,
+            // AND NO other genres have been found from the 'filter' array yet.
+            const isMovie = newProgram.id?.startsWith('MV');
+
+            if (config.includeSeriesGenre && currentGenres.size === 0 && !isMovie) {
+                // Ensure it's explicitly a series if seriesId is present and not '0'
+                if (newProgram.seriesId && newProgram.seriesId !== '0') {
+                    currentGenres.add('series');
+                }
+            }
+
+            newProgram.genres = Array.from(currentGenres);
+
+            return { ...event, program: newProgram };
+          });
+
+          if (!channelsMap.has(newChannel.channelId)) {
+            channelsMap.set(newChannel.channelId, {
+              ...newChannel,
+              events: processedEvents,
+            });
+          } else {
+            const existingChannel = channelsMap.get(newChannel.channelId)!;
+            existingChannel.events.push(...processedEvents);
+          }
+        }
+      })
+      .catch(fetchError => {
+        // Re-throw to ensure the main() function catches this error
+        throw fetchError;
+      });
 
     fetchPromises.push(fetchPromise);
   }

@@ -1,4 +1,5 @@
-import type { GridApiResponse } from "./tvlistings.js";
+// xmltv.ts
+import type { GridApiResponse } from "./tvlistings.js"; // Make sure this path is correct
 
 export function escapeXml(unsafe: string): string {
   return unsafe
@@ -86,6 +87,16 @@ export function buildProgramsXml(data: GridApiResponse): string {
         xml += `    <desc>${escapeXml(event.program.shortDesc)}</desc>\n`;
       }
 
+      // --- THIS IS THE CRITICAL BLOCK THAT MUST BE PRESENT AND UNCHANGED ---
+      if (event.program.genres && event.program.genres.length > 0) {
+        const sortedGenres = [...event.program.genres].sort((a, b) => a.localeCompare(b));
+        for (const genre of sortedGenres) {
+          const capitalizedGenre = genre.charAt(0).toUpperCase() + genre.slice(1);
+          xml += `    <category lang="en">${escapeXml(capitalizedGenre)}</category>\n`;
+        }
+      }
+      // ---------------------------------------------------------------------
+
       if (event.rating) {
         xml += `    <rating system="MPAA"><value>${escapeXml(
           event.rating,
@@ -147,8 +158,8 @@ export function buildProgramsXml(data: GridApiResponse): string {
         // Apply zero-based indexing for xmltv_ns
         if (
           !isNaN(seasonNum) && !isNaN(episodeNum) &&
-          seasonNum >= 1 && // Ensure season is at least 1 for zero-based conversion
-          episodeNum >= 1   // Ensure episode is at least 1 for zero-based conversion
+          seasonNum >= 1 &&
+          episodeNum >= 1
         ) {
           xml += `    <episode-num system="xmltv_ns">${seasonNum - 1}.${episodeNum - 1}.</episode-num>\n`;
         }
