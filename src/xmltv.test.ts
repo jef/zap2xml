@@ -344,7 +344,7 @@ describe("buildProgramsXml", () => {
     expect(result).not.toContain("<sub-title>");
     expect(result).not.toContain("<desc>");
     expect(result).not.toContain("<rating>");
-    expect(result).not.toContain('<category lange="en">');
+    expect(result).not.toContain('<category lang="en">');
     expect(result).not.toContain("<episode-num");
     expect(result).not.toContain("<icon");
   });
