@@ -80,7 +80,7 @@ export function buildProgramsXml(data: GridApiResponse): string {
 
       if (event.filter && event.filter.length > 0) {
         for (let i = 0; i < event.filter.length; i++) {
-          const category = event.filter[i].match(/^(filter)-(.*?)$/);
+          const category = event.filter(i).match(/^(filter)-(.*?)$/);
           if (category) {
             xml += `    <category lang="en">${category[2]}</category>`;
           }
