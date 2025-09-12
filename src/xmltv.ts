@@ -78,11 +78,12 @@ export function buildProgramsXml(data: GridApiResponse): string {
         xml += `    <desc>${escapeXml(event.program.shortDesc)}</desc>\n`;
       }
 
-      if (event.filter && event.filter.length > 0) {
-        for (let i = 0; i < event.filter.length; i++) {
-          const category = event.filter(i).match(/^(filter)-(.*?)$/);
+      const filters = event.filter?.filter(item => item); 
+      if (filters?.length) {
+        for (const filter of filters) {
+          const category = filter.match(/^(filter)-(.*?)$/);
           if (category) {
-            xml += `    <category lang="en">${category[2]}</category>`;
+            xml += '    <category lang="en">${category[2]}</category>`;
           }
         }
       }
