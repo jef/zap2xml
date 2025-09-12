@@ -83,7 +83,7 @@ export function buildProgramsXml(data: GridApiResponse): string {
         for (const filter of filters) {
           const category = filter.match(/^(filter)-(.*?)$/);
           if (category) {
-            xml += '    <category lang="en">${category[2]}</category>`;
+            xml += `    <category lang="en">${category[2]}</category>`;
           }
         }
       }
