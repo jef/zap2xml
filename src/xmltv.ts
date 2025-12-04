@@ -31,7 +31,7 @@ export function buildChannelsXml(
   data: GridApiResponse,
   options: XmltvOptions = {},
 ): string {
-  // Handle the caller ommitting XmltvOptions
+  // Handle the caller omitting XmltvOptions
   const thumbnailWidth = options.channelThumbnailWidth ?? null;
   let xml = "";
 
