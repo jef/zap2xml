@@ -177,6 +177,21 @@ describe("buildXmltv", () => {
     expect(result).not.toContain("<episode-num");
     expect(result).not.toContain("<icon");
   });
+
+  it("should honor channel thumbnail width option", () => {
+    const result = buildXmltv(mockData, { channelThumbnailWidth: 120 });
+    expect(result).toContain(
+      '<icon src="https://zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png?w=120" />',
+    );
+  });
+
+  it("should remove width when option is zero", () => {
+    const result = buildXmltv(mockData, { channelThumbnailWidth: 0 });
+    expect(result).toContain(
+      '<icon src="https://zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png" />',
+    );
+    expect(result).not.toContain("?w=55");
+  });
 });
 
 describe("escapeXml", () => {
@@ -255,6 +270,21 @@ describe("buildChannelsXml", () => {
     expect(result).toContain('<channel id="123">');
     expect(result).toContain("<display-name>TEST</display-name>");
     expect(result).not.toContain("<icon");
+  });
+
+  it("should respect channel thumbnail width option", () => {
+    const result = buildChannelsXml(mockData, { channelThumbnailWidth: 200 });
+    expect(result).toContain(
+      '<icon src="https://zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png?w=200" />',
+    );
+  });
+
+  it("should strip width parameter when option is zero", () => {
+    const result = buildChannelsXml(mockData, { channelThumbnailWidth: 0 });
+    expect(result).toContain(
+      '<icon src="https://zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png" />',
+    );
+    expect(result).not.toContain("?w=55");
   });
 });
 
