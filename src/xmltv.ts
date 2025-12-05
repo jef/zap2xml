@@ -1,5 +1,9 @@
 import type { GridApiResponse } from "./tvlistings.js";
 
+export type XmltvOptions = {
+  channelThumbnailWidth?: number | null;
+};
+
 export function escapeXml(unsafe: string): string {
   return unsafe
     .replace(/&/g, "&amp;")
@@ -23,7 +27,12 @@ export function formatDate(dateStr: string): string {
   return `${YYYY}${MM}${DD}${hh}${mm}${ss} +0000`;
 }
 
-export function buildChannelsXml(data: GridApiResponse): string {
+export function buildChannelsXml(
+  data: GridApiResponse,
+  options: XmltvOptions = {},
+): string {
+  // Handle the caller omitting XmltvOptions
+  const thumbnailWidth = options.channelThumbnailWidth ?? null;
   let xml = "";
 
   for (const channel of data.channels) {
@@ -43,11 +52,21 @@ export function buildChannelsXml(data: GridApiResponse): string {
     }
 
     if (channel.thumbnail) {
-      xml += `    <icon src="${escapeXml(
-        channel.thumbnail.startsWith("http")
-          ? channel.thumbnail
-          : "https:" + channel.thumbnail,
-      )}" />\n`;
+      let iconUrl = channel.thumbnail.startsWith("http")
+        ? channel.thumbnail
+        : "https:" + channel.thumbnail;
+
+      if (thumbnailWidth !== null) {
+        const parsedUrl = new URL(iconUrl);
+        if (thumbnailWidth === 0) {
+          parsedUrl.searchParams.delete("w");
+        } else {
+          parsedUrl.searchParams.set("w", String(thumbnailWidth));
+        }
+        iconUrl = parsedUrl.toString();
+      }
+
+      xml += `    <icon src="${escapeXml(iconUrl)}" />\n`;
     }
 
     xml += "  </channel>\n";
@@ -153,13 +172,16 @@ export function buildProgramsXml(data: GridApiResponse): string {
   return xml;
 }
 
-export function buildXmltv(data: GridApiResponse): string {
+export function buildXmltv(
+  data: GridApiResponse,
+  options: XmltvOptions = {},
+): string {
   console.log("Building XMLTV file");
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml +=
     '<tv generator-info-name="jef/zap2xml" generator-info-url="https://github.com/jef/zap2xml">\n';
-  xml += buildChannelsXml(data);
+  xml += buildChannelsXml(data, options);
   xml += buildProgramsXml(data);
   xml += "</tv>\n";
 

@@ -64,5 +64,17 @@ export function getConfig() {
         .find((arg) => arg.startsWith("--outputFile="))
         ?.split("=")[1] ||
       "xmltv.xml",
+    channelThumbnailWidth: (() => {
+      const rawWidth =
+        process.env["CHANNEL_THUMBNAIL_WIDTH"] ||
+        process.argv
+          .find((arg) => arg.startsWith("--channelThumbnailWidth="))
+          ?.split("=")[1];
+      if (rawWidth === undefined || rawWidth === null || rawWidth === "") {
+        return null;
+      }
+      const parsedWidth = Number(rawWidth);
+      return Number.isNaN(parsedWidth) ? null : parsedWidth;
+    })(),
   };
 }

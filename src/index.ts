@@ -11,14 +11,15 @@ function isHelp() {
 Usage: node dist/index.js [options]
 
 Options:
---help           Show this help message
---lineupId=ID    Lineup ID (default: USA-lineupId-DEFAULT)
---timespan=NUM   Timespan in hours (up to 360 = 15 days, default: 6)
---pref=LIST      User preferences, comma separated. Can be m, p, and h (default: empty)'
---country=CON    Country code (default: USA)
---postalCode=ZIP Postal code (default: 30309)
---userAgent=UA   Custom user agent string (default: Uses random if not specified)
---timezone=TZ    Timezone (default: America/New_York)
+--help                      Show this help message
+--lineupId=ID               Lineup ID (default: USA-lineupId-DEFAULT)
+--timespan=NUM              Timespan in hours (up to 360 = 15 days, default: 6)
+--pref=LIST                 User preferences, comma separated. Can be m, p, and h (default: empty)'
+--country=CON               Country code (default: USA)
+--postalCode=ZIP            Postal code (default: 30309)
+--userAgent=UA              Custom user agent string (default: Uses random if not specified)
+--timezone=TZ               Timezone (default: America/New_York)
+--channelThumbnailWidth=NUM Width of channel thumbnails in pixels (0 removes the width parameter for full size, unset uses API default)
 `);
     process.exit(0);
   }
@@ -29,7 +30,9 @@ async function main() {
     isHelp();
 
     const data = await getTVListings();
-    const xml = buildXmltv(data);
+    const xml = buildXmltv(data, {
+      channelThumbnailWidth: config.channelThumbnailWidth,
+    });
 
     console.log("Writing XMLTV file");
     writeFileSync(config.outputFile, xml, { encoding: "utf-8" });
