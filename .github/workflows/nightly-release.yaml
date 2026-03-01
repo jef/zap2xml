@@ -31,10 +31,10 @@ jobs:
         run: |
           docker build \
           -t "ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA:0:7}" \
-          -t "ghcr.io/${GITHUB_REPOSITORY}:nightly" .
+          -t "ghcr.io/${GITHUB_REPOSITORY}:latest" .
 
       - name: Release Docker image
         if: steps.code-change.outputs.should-run == 'true'
         run: |
           docker push "ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA:0:7}"
-          docker push "ghcr.io/${GITHUB_REPOSITORY}:nightly"
+          docker push "ghcr.io/${GITHUB_REPOSITORY}:latest"

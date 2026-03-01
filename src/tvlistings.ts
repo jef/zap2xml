@@ -3,112 +3,85 @@ import { getConfig } from "./config.js";
 const config = getConfig();
 
 export interface Program {
-  /** "title": "GMA3" */
   title: string;
-  /** "id": "EP059182660025" */
   id: string;
-  /** "tmsId": "EP059182660025" */
   tmsId: string;
-  /** "shortDesc": "BIA performs; comic Zarna Garg; lifestyle contributor Lori Bergamotto; ABC News chief medical correspondent Dr. Tara Narula." */
-  shortDesc: string;
-  /** "season": "5" */
-  season: string;
-  /** "releaseYear": null */
+  shortDesc: string | null;
+  season: string | null;
   releaseYear: string | null;
-  /** "episode": "217" */
-  episode: string;
-  /** "episodeTitle": null */
+  episode: string | null;
   episodeTitle: string | null;
-  /** "seriesId": "SH05918266" */
   seriesId: string;
-  /** "isGeneric": "0" */
   isGeneric: string;
+  originalAirDate?: string;
+  episodeAirDate?: string;
+  genres?: string[];
 }
 
 export interface Event {
-  /** "callSign": "KOMODT" */
   callSign: string;
-  /** "duration": "60" */
   duration: string;
-  /** "startTime": "2025-07-18T19:00:00Z" */
   startTime: string;
-  /** "endTime": "2025-07-18T20:00:00Z" */
   endTime: string;
-  /** "thumbnail": "p30687311_b_v13_aa" */
-  thumbnail: string;
-  /** "channelNo": "4.1" */
+  thumbnail: string | null;
   channelNo: string;
-  /** "filter": ["filter-news"] */
-  filter: string[];
-  /** "seriesId": "SH05918266" */
+  filter?: string[];
   seriesId: string;
-  /** "rating": "TV-PG" */
-  rating: string;
-  /** "flag": ["New"] */
+  rating: string | null;
   flag: string[];
-  /** "tags": ["Stereo", "CC"] */
   tags: string[];
-  /** "program": {...} */
   program: Program;
 }
 
 export interface Channel {
-  /** "callSign": "KOMODT" */
   callSign: string;
-  /** "affiliateName": "AMERICAN BROADCASTING COMPANY" */
-  affiliateName: string;
-  /** "affiliateCallSign": "null" */
+  affiliateName: string | null;
   affiliateCallSign: string | null;
-  /** "channelId": "19629" */
   channelId: string;
-  /** "channelNo": "4.1" */
-  channelNo: string;
-  /** "events": [...] */
+  channelNo: string | null;
   events: Event[];
-  /** "id": "196290" */
   id: string;
-  /** "stationGenres": [false] */
   stationGenres: boolean[];
-  /** "stationFilters": ["filter-news", "filter-talk"] */
   stationFilters: string[];
-  /** "thumbnail": "//zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png?w=55" */
-  thumbnail: string;
+  thumbnail: string | null;
 }
 
 export interface GridApiResponse {
-  /** "channels": [...] */
   channels: Channel[];
 }
 
 function buildUrl(time: number, timespan: number): string {
-  const params = {
-    lineupId: config.lineupId,
-    timespan: timespan.toString(),
-    headendId: config.headendId,
-    country: config.country,
-    timezone: config.timezone,
-    postalCode: config.postalCode,
-    isOverride: "true",
-    pref: config.pref + "16,128" || "16,128",
-    aid: "orbebb",
-    languagecode: "en-us",
-    time: time.toString(),
-    device: "X",
-    userId: "-",
-  };
+  // Build query string in a fixed order; timezone is intentionally left blank.
+  const orderedParams: Array<[string, string]> = [
+    ["lineupId", config.lineupId],
+    ["timespan", timespan.toString()],
+    ["headendId", config.headendId],
+    ["country", config.country],
+    ["timezone", ""], // no longer used
+    ["device", config.lineupId.includes("X") ? "X" : "-"],
+    ["postalCode", config.postalCode],
+    ["isOverride", "true"],
+    ["time", time.toString()],
+    ["pref", "16,128"],
+    ["userId", "-"],
+    ["aid", "chi"],
+    ["languagecode", "en-us"],
+  ];
 
-  const urlParams = new URLSearchParams(params).toString();
+  const query = orderedParams
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join("&");
 
-  return `${config.baseUrl}?${urlParams}`;
+  return `${config.baseUrl}?${query}`;
 }
 
 export async function getTVListings(): Promise<GridApiResponse> {
-  console.log("Fetching TV listings");
-
   const totalHours = parseInt(config.timespan, 10);
-  const chunkHours = 6; // Gracenote allows up to 6 hours per request
-  const now = Math.floor(Date.now() / 1000); // Current time in UNIX timestamp
+  const chunkHours = 6;
+  const now = Math.floor(Date.now() / 1000);
   const channelsMap: Map<string, Channel> = new Map();
+
+  console.log(`Fetching ${totalHours} hours of TV listings in ${chunkHours}-hour chunks...`);
 
   const fetchPromises: Promise<void>[] = [];
 
@@ -116,36 +89,73 @@ export async function getTVListings(): Promise<GridApiResponse> {
     const time = now + offset * 3600;
     const url = buildUrl(time, chunkHours);
 
+    console.log(`Fetching chunk ${offset / chunkHours + 1}/${Math.ceil(totalHours / chunkHours)}: ${url}`);
+
     const fetchPromise = fetch(url, {
       headers: {
         "User-Agent": config.userAgent || "",
       },
-    }).then(async (response) => {
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch: ${response.status} ${response.statusText}`,
-        );
-      }
-      const chunkData = (await response.json()) as GridApiResponse;
-
-      for (const newChannel of chunkData.channels) {
-        if (!channelsMap.has(newChannel.channelId)) {
-          // Clone channel with its events
-          channelsMap.set(newChannel.channelId, {
-            ...newChannel,
-            events: [...newChannel.events],
-          });
-        } else {
-          const existingChannel = channelsMap.get(newChannel.channelId)!;
-          existingChannel.events.push(...newChannel.events);
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorBody = await response.text();
+          throw new Error(
+            `Failed to fetch URL ${url}: ${response.status} ${response.statusText} - ${errorBody.substring(0, 200)}...`,
+          );
         }
-      }
-    });
+        return response.json() as Promise<GridApiResponse>;
+      })
+      .then((chunkData: GridApiResponse) => {
+        console.log(`Chunk ${offset / chunkHours + 1} returned ${chunkData.channels.length} channels`);
+        for (const newChannel of chunkData.channels) {
+          const processedEvents = newChannel.events.map(event => {
+            const newProgram = { ...event.program };
+            const currentGenres = new Set<string>(newProgram.genres || []);
+
+            if (event.filter && event.filter.length > 0) {
+              event.filter.forEach(filterTag => {
+                const genre = filterTag.replace(/filter-/i, '').toLowerCase();
+                if (genre) {
+                  currentGenres.add(genre);
+                }
+              });
+            }
+
+            const isMovie = newProgram.id?.startsWith('MV');
+
+            if (currentGenres.size === 0 && !isMovie) {
+                if (newProgram.seriesId && newProgram.seriesId !== '0') {
+                    currentGenres.add('series');
+                }
+            }
+
+            newProgram.genres = Array.from(currentGenres);
+
+            return { ...event, program: newProgram };
+          });
+
+          if (!channelsMap.has(newChannel.channelId)) {
+            channelsMap.set(newChannel.channelId, {
+              ...newChannel,
+              events: processedEvents,
+            });
+          } else {
+            const existingChannel = channelsMap.get(newChannel.channelId)!;
+            existingChannel.events.push(...processedEvents);
+          }
+        }
+      })
+      .catch(fetchError => {
+        console.error(`Error fetching chunk ${offset / chunkHours + 1}:`, fetchError);
+        throw fetchError;
+      });
 
     fetchPromises.push(fetchPromise);
   }
 
+  console.log("Waiting for all chunks to complete...");
   await Promise.all(fetchPromises);
 
+  console.log(`Completed fetching TV listings. Total unique channels: ${channelsMap.size}`);
   return { channels: Array.from(channelsMap.values()) };
 }

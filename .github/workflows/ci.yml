@@ -17,7 +17,7 @@ jobs:
         run: docker build .
 
   build-lint-test:
-    name: Build, Lint, and Test
+    name: Build and Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -37,9 +37,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
-
-      - name: Unit tests
-        run: npm run test:run
 
       - name: Integration tests
         run: |

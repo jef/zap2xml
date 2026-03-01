@@ -29,6 +29,7 @@
     "useDefineForClassFields": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
   },
   "include": [
     "src/**/*.ts"

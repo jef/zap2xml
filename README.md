@@ -2,90 +2,62 @@
 
 Automate TV guides to XMLTV format. Easy to use, up-to-date. See below for getting started.
 
-I also _somewhat_ maintain a version of the original in the [historical-perl branch](https://github.com/jef/zap2xml/tree/historical-perl) if you're interested in that.
+I also *somewhat* maintain a version of the original in the [historical-perl branch](https://github.com/jesmannstl/zap2xml/tree/historical-perl) if you're interested in that.
 
-## How to use
+## First Time [Installation in node.js](https://github.com/jesmannstl/zap2xml/wiki/Installation), [How to Run](https://github.com/jesmannstl/zap2xml/wiki/How-to-Run), [Scheduling](https://github.com/jesmannstl/zap2xml/wiki/Scheduling) or [using Docker](https://github.com/jesmannstl/zap2xml/wiki/Using-Docker) see [Wiki](https://github.com/jesmannstl/zap2xml/wiki) for instructions 
 
-### Node.js
+### Need help? [Finding a lineup](https://github.com/jesmannstl/zap2xml/wiki/Finding-a-Lineup-ID) or for [Dish and DirecTV lineups](https://github.com/jesmannstl/zap2xml/wiki/US-Dish-Directv-Lineups).  Other help? Drop a line in the [Discussions](https://github.com/jesmannstl/zap2xml/discussions)
 
-```bash
-npm i && npm run build && node dist/index.js
-```
+# Recent updates
 
-See [Command line arguments](#command-line-arguments) for configuration options.
+# (2025-08-20)
 
-### Docker
+* Changed default Sort option to the Channel Number in Lineup if available
+* Added '--stationid' to sort the previous way by StationID
+* Added `--sortname` to sort by the Call Sign
 
-| Tag     | Description             |
-| ------- | ----------------------- |
-| latest  | Stable zap2xml releases |
-| nightly | HEAD zap2xml release    |
+# (2025-08-18)
 
-#### docker-compose
+* Changed URL pull to match output from page when stopped working
+* Added Display Name with Channel Number and Call Sign to mirror previous Perl Script
+* Added `--nextpvr` option to list Channel Number Call Sign first
 
-```yaml
-services:
-  zap2xml:
-    container_name: zap2xml
-    image: ghcr.io/jef/zap2xml:latest
-    environment:
-      OUTPUT_FILE: /xmltv/xmltv.xml
-    volumes:
-      - ./xmltv:/xmltv
-    restart: unless-stopped
-```
+# (2025-08-09)
 
-See [Environment variables](#environment-variables) for configuration options.
+* Restored `<episode-num system="dd_progid">` tag that Plex uses that was missing.
+* Fixed Sorting so output is listed by Channel ID (common station/gracenote id) then by date/time.
 
-## Configuration
+# (2025-08-07)
 
-### Environment variables
+* Reordered Program fields to match original Perl script output
+* `--postalCode` not required as long as Country and lineup Id correct except Over the Air
+* Moved `<date>` above `<category>` to match original Perl output.  Corrected where Movie Release Year is properly displayed.
+* Added `<length>` tag.
+* Updated channel logo no longer has fixed width so can display in better quality
 
-| Variable      | Description                                                                                                     | Default                          |
-| ------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `LINEUP_ID`   | Lineup ID; Read more in the [Wiki](https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID)                    | `USA-lineupId-DEFAULT` (Attenna) |
-| `TIMESPAN`    | Timespan in hours (up to 360 = 15 days, default: 6)                                                             | 6                                |
-| `PREF`        | User Preferences, comma separated list. `m` for showing music, `p` for showing pay-per-view, `h` for showing HD | (empty)                          |
-| `COUNTRY`     | Country code (default: `USA`)                                                                                   | USA                              |
-| `POSTAL_CODE` | Postal code of where shows are available.                                                                       | 30309                            |
-| `USER_AGENT`  | Custom user agent string for HTTP requests.                                                                     | Uses random if not specified     |
-| `TZ`          | Timezone                                                                                                        | System default                   |
-| `SLEEP_TIME`  | Sleep time before next run in seconds (default: 21600, Only used with Docker.)                                  | 21600                            |
-| `OUTPUT_FILE` | Output file name (default: xmltv.xml)                                                                           | xmltv.xml                        |
+# (2025-08-06)
 
-### Command line arguments
+* Added Valid Country Codes that can be used
+* Added `--mediaportal` option to use `<episode-num system="xmltv_ns">` before others so Media Portal will display Season/Episode properly
 
-| Argument       | Description                                                                                                     | Default                          |
-| -------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `--lineupId`   | Lineup ID; Read more in the [Wiki](https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID)                    | `USA-lineupId-DEFAULT` (Attenna) |
-| `--timespan`   | Timespan in hours (up to 360 = 15 days, default: 6)                                                             | 6                                |
-| `--pref`       | User Preferences, comma separated list. `m` for showing music, `p` for showing pay-per-view, `h` for showing HD | (empty)                          |
-| `--country`    | Country code (default: `USA`)                                                                                   | USA                              |
-| `--postalCode` | Postal code of where shows are available.                                                                       | 30309                            |
-| `--userAgent`  | Custom user agent string for HTTP requests.                                                                     | Uses random if not specified     |
-| `--timezone`   | Timezone                                                                                                        | System default                   |
-| `--outputFile` | Output file name (default: xmltv.xml)                                                                           | xmltv.xml                        |
+# (2025-08-05)
 
-## Setup and running in intervals
+# Changes since previous release
 
-### Running natively
+These changes are currently on the [jesmannstl/zap2xml](https://github.com/jesmannstl/zap2xml) fork
 
-You can run zap2xml natively on your system. It is recommended to use a task scheduler to run it in intervals.
+* Added Category if available (Movie, Sports, News, Talk, Family etc)
+* Added Category "Series" to all programs that did not return a category
+* Added additional Season Episode formats for various players
+* Added year as Season for programs that only list an episode number like daily cable news
+* Added <date> tag to all programs without an aired date normalized to America/New York
+* Added xmltv_ns with the date aired as Season YYYY Episode MMYY to Non Movie or Sports with no other Season/Episode like local news so would have the ability to record as Series is most players.
+* Added URL to program details from old Perl function.
+* Added --appendAsterisk to add * to title on programs that are New and/or Live
+* Added <previously-shown /> tag to programs that are not <New> and/or <Live>
+* Updated affiliateId after orbebb stopped working
 
-Here are some links to get you started on your machine:
+Updated Docker with these changes use APPEND_ASTERISK: TRUE for the --appendAsterisk option
 
-- Linux and Raspberry Pi: https://github.com/jef/zap2xml/wiki/Running-on-Linux-and-Raspberry-Pi
-- macOS: https://github.com/jef/zap2xml/wiki/Running-on-macOS
-- Windows: https://github.com/jef/zap2xml/wiki/Running-on-Windows
 
-If you want to run zap2xml in intervals, you can use a task scheduler like `cron` on Linux or the Task Scheduler on Windows. Each of the wiki pages above has a section on how to set up zap2xml to run in intervals.
 
-### Running in Docker
-
-You can run zap2xml in a Docker container. The `SLEEP_TIME` environment variable can be used to set the interval between runs. The default is 21600 seconds (6 hours).
-
-## FAQ
-
-### How do I get my Lineup ID?
-
-Visit https://github.com/jef/zap2xml/wiki/Retrieving-Lineup-ID

@@ -12,8 +12,11 @@ COPY rollup.config.ts rollup.config.ts
 COPY entrypoint.sh entrypoint.sh
 COPY src/ src/
 
+# Fix line endings for the entrypoint script and make it executable
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
 RUN npm run build
 
 RUN ls -l /app
 
-ENTRYPOINT ["/bin/sh", "-c", "/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
