@@ -1,5 +1,14 @@
 import type { GridApiResponse } from "./tvlistings.js";
 
+const TMS_IMAGE_BASE_URL = "https://www.tmsimg.com";
+
+function normalizeTmsImageUrl(url: string): string {
+  return url.replace(
+    /^(?:https?:)?\/\/zap2it\.tmsimg\.com(?=\/)/,
+    TMS_IMAGE_BASE_URL,
+  );
+}
+
 export function escapeXml(unsafe: string): string {
   return unsafe
     .replace(/&/g, "&amp;")
@@ -43,10 +52,13 @@ export function buildChannelsXml(data: GridApiResponse): string {
     }
 
     if (channel.thumbnail) {
-      xml += `    <icon src="${escapeXml(
+      const src = normalizeTmsImageUrl(
         channel.thumbnail.startsWith("http")
           ? channel.thumbnail
           : "https:" + channel.thumbnail,
+      );
+      xml += `    <icon src="${escapeXml(
+        src,
       )}" />\n`;
     }
 
@@ -140,9 +152,11 @@ export function buildProgramsXml(data: GridApiResponse): string {
       }
 
       if (event.thumbnail) {
-        const src = event.thumbnail.startsWith("http")
-          ? event.thumbnail
-          : "https://zap2it.tmsimg.com/assets/" + event.thumbnail + ".jpg";
+        const src = normalizeTmsImageUrl(
+          event.thumbnail.startsWith("http")
+            ? event.thumbnail
+            : `${TMS_IMAGE_BASE_URL}/assets/${event.thumbnail}.jpg`,
+        );
         xml += `    <icon src="${escapeXml(src)}" />\n`;
       }
 
