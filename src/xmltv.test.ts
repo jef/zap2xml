@@ -96,15 +96,22 @@ describe("buildXmltv", () => {
     const result = buildXmltv(mockData);
     expect(result).toContain("<new />");
     expect(result).toContain('<audio type="stereo" />');
-    expect(result).toContain('<audio type="cc" />');
+    expect(result).toContain('<subtitles type="teletext" />');
   });
 
   it("should include episode information", () => {
     const result = buildXmltv(mockData);
-    expect(result).toContain('<episode-num system="season">5</episode-num>');
-    expect(result).toContain('<episode-num system="episode">217</episode-num>');
     expect(result).toContain(
-      '<episode-num system="series">SH05918266</episode-num>',
+      '<episode-num system="onscreen">S05E217</episode-num>',
+    );
+    expect(result).toContain(
+      '<episode-num system="common">S05E217</episode-num>',
+    );
+    expect(result).toContain(
+      '<episode-num system="dd_progid">EP059182660025</episode-num>',
+    );
+    expect(result).toContain(
+      '<episode-num system="xmltv_ns">5 . 217.</episode-num>',
     );
   });
 
@@ -230,7 +237,18 @@ describe("buildChannelsXml", () => {
     );
     expect(result).toContain("<display-name>4.1</display-name>");
     expect(result).toContain(
-      '<icon src="https://zap2it.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png?w=55" />',
+      '<icon src="https://www.tmsimg.com/h3/NowShowing/19629/s28708_ll_h15_ac.png?w=55" />',
+    );
+  });
+
+  it("should normalize absolute legacy TMS channel thumbnail URLs", () => {
+    const data = structuredClone(mockData);
+    data.channels[0].thumbnail =
+      "http://zap2it.tmsimg.com/h3/NowShowing/19629/channel.png";
+
+    const result = buildChannelsXml(data);
+    expect(result).toContain(
+      '<icon src="https://www.tmsimg.com/h3/NowShowing/19629/channel.png" />',
     );
   });
 
@@ -274,14 +292,32 @@ describe("buildProgramsXml", () => {
     );
     expect(result).toContain("<new />");
     expect(result).toContain('<audio type="stereo" />');
-    expect(result).toContain('<audio type="cc" />');
-    expect(result).toContain('<episode-num system="season">5</episode-num>');
-    expect(result).toContain('<episode-num system="episode">217</episode-num>');
+    expect(result).toContain('<subtitles type="teletext" />');
     expect(result).toContain(
-      '<episode-num system="series">SH05918266</episode-num>',
+      '<episode-num system="onscreen">S05E217</episode-num>',
     );
     expect(result).toContain(
-      '<icon src="https://zap2it.tmsimg.com/assets/p30687311_b_v13_aa.jpg" />',
+      '<episode-num system="common">S05E217</episode-num>',
+    );
+    expect(result).toContain(
+      '<episode-num system="dd_progid">EP059182660025</episode-num>',
+    );
+    expect(result).toContain(
+      '<episode-num system="xmltv_ns">5 . 217.</episode-num>',
+    );
+    expect(result).toContain(
+      '<icon src="https://www.tmsimg.com/assets/p30687311_b_v13_aa.jpg" />',
+    );
+  });
+
+  it("should normalize absolute legacy TMS programme thumbnail URLs", () => {
+    const data = structuredClone(mockData);
+    data.channels[0].events[0].thumbnail =
+      "https://zap2it.tmsimg.com/assets/programme.jpg";
+
+    const result = buildProgramsXml(data);
+    expect(result).toContain(
+      '<icon src="https://www.tmsimg.com/assets/programme.jpg" />',
     );
   });
 
