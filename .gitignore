@@ -7,3 +7,6 @@ dist
 
 compose.yaml
 xmltv.xml
+
+/run-zap2xml.sh
+/run-zap2xml.bat
