@@ -24,7 +24,7 @@ const mockData: GridApiResponse = {
           endTime: "2025-07-18T20:00:00Z",
           thumbnail: "p30687311_b_v13_aa",
           channelNo: "4.1",
-          filter: ["filter-news"],
+          filter: ["filter-news", "filter-sports"],
           seriesId: "SH05918266",
           rating: "TV-PG",
           flag: ["New"],
@@ -85,6 +85,12 @@ describe("buildXmltv", () => {
     );
   });
 
+  it("should include category information", () => {
+    const result = buildXmltv(mockData);
+    expect(result).toContain('<category lang="en">news</category>');
+    expect(result).toContain('<category lang="en">sports</category>');
+  });
+  
   it("should include rating information", () => {
     const result = buildXmltv(mockData);
     expect(result).toContain(
@@ -173,7 +179,7 @@ describe("buildXmltv", () => {
     expect(result).not.toContain("<sub-title>");
     expect(result).not.toContain("<desc>");
     expect(result).not.toContain("<rating>");
-    expect(result).not.toContain("<category>");
+    expect(result).not.toContain('<category lang="en">');
     expect(result).not.toContain("<episode-num");
     expect(result).not.toContain("<icon");
   });
@@ -269,6 +275,8 @@ describe("buildProgramsXml", () => {
     expect(result).toContain(
       "<desc>BIA performs; comic Zarna Garg; lifestyle contributor Lori Bergamotto; ABC News chief medical correspondent Dr. Tara Narula.</desc>",
     );
+    expect(result).toContain('<category lang="en">news</category>');
+    expect(result).toContain('<category lang="en">sports</category>');
     expect(result).toContain(
       '<rating system="MPAA"><value>TV-PG</value></rating>',
     );
@@ -336,7 +344,7 @@ describe("buildProgramsXml", () => {
     expect(result).not.toContain("<sub-title>");
     expect(result).not.toContain("<desc>");
     expect(result).not.toContain("<rating>");
-    expect(result).not.toContain("<category>");
+    expect(result).not.toContain('<category lang="en">');
     expect(result).not.toContain("<episode-num");
     expect(result).not.toContain("<icon");
   });

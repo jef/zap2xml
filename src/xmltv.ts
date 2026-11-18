@@ -78,6 +78,16 @@ export function buildProgramsXml(data: GridApiResponse): string {
         xml += `    <desc>${escapeXml(event.program.shortDesc)}</desc>\n`;
       }
 
+      const filters = event.filter?.filter(item => item); 
+      if (filters?.length) {
+        for (const filter of filters) {
+          const category = filter.match(/^(filter)-(.*?)$/);
+          if (category) {
+            xml += `    <category lang="en">${category[2]}</category>`;
+          }
+        }
+      }
+      
       if (event.rating) {
         xml += `    <rating system="MPAA"><value>${escapeXml(
           event.rating,
