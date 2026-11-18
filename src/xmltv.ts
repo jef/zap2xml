@@ -142,7 +142,7 @@ export function buildProgramsXml(data: GridApiResponse): string {
       if (event.thumbnail) {
         const src = event.thumbnail.startsWith("http")
           ? event.thumbnail
-          : "https://zap2it.tmsimg.com/assets/" + event.thumbnail + ".jpg";
+          : "https://zpmc.tmsimg.com/assets/" + event.thumbnail + ".jpg";
         xml += `    <icon src="${escapeXml(src)}" />\n`;
       }
 

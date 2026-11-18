@@ -51,7 +51,7 @@ export function getConfig() {
       process.env["PREF"] ||
       process.argv.find((arg) => arg.startsWith("--pref="))?.split("=")[1] ||
       "",
-    timezone: process.env.TZ || "America/New_York",
+    timezone: process.env['TZ'] || "America/New_York",
     userAgent:
       process.env["USER_AGENT"] ||
       process.argv
